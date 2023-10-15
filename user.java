@@ -37,7 +37,7 @@ public class Users {
     }
 }
 
-class User {
+public class User {
   private int userID;
   private String name;
   private String password;
