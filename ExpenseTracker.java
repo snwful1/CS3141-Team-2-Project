@@ -1,3 +1,5 @@
+import java.util.List;
+
 public class ExpenseTracker {
     public static void main(String[] args) {
         // Create a TransactionManager to manage transactions
