@@ -1,4 +1,6 @@
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.text.FontWeight;
@@ -43,15 +45,13 @@ public class WindowDisplay extends Application{
 		userCreation.setFont(Font.font("TimesRoman", FontWeight.BOLD, 30));
 		grid.add(userCreation, 0, 0, 2, 1);
 
-		Label userName = new Label("Create User Name:");
+		Label userName = new Label("New Username:");
 		grid.add(userName, 0, 1);
-
 		TextField userTextField = new TextField();
 		grid.add(userTextField, 1, 1);
 
-		Label pw = new Label("Create Password:");
+		Label pw = new Label("New Password:");
 		grid.add(pw, 0, 2);
-
 		PasswordField pwBox = new PasswordField();
 		grid.add(pwBox, 1, 2);
 
@@ -62,11 +62,47 @@ public class WindowDisplay extends Application{
 		h1.getChildren().add(b1);
 		grid.add(h1, 1, 3);
 
+		b1.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				
+			}
+		});
+
+		// Login Labels and Textfields
+		Text loginText = new Text("Login");
+		loginText.setFont(Font.font("TimesRoman", FontWeight.BOLD, 30));
+		grid.add(loginText, 0, 4, 2, 1);
+
+		Label userName2 = new Label("Username:");
+		grid.add(userName2, 0, 5);
+		TextField userTextField2 = new TextField();
+		grid.add(userTextField2, 1, 5);
+
+		Label pw2 = new Label("Password:");
+		grid.add(pw2, 0, 6);
+		PasswordField pwBox2 = new PasswordField();
+		grid.add(pwBox2, 1, 6);
+
+		// Login Button
+		Button b2 = new Button("Login");
+		HBox h2 = new HBox(10);
+		h2.setAlignment(Pos.CENTER_RIGHT);
+		h2.getChildren().add(b2);
+		grid.add(h2, 1, 7);
+
+		b2.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+
+			}
+		});
+
+
 		// Commented out while working on ui
         //Group root = new Group(grid);
 
         Scene scene = new Scene(grid,250, 500);
-
         // Add your content to the scene
 
 		//Set the scene on the stage and show the stage
