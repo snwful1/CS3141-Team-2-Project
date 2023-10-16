@@ -1,3 +1,8 @@
+/**
+ * @author Pan Prathongkham
+ * CS3141-Team Software Project
+ * 10/16/2023
+ */
 public class Income {
 
     private String name;
