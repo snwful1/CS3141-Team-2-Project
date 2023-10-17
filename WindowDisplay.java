@@ -14,27 +14,28 @@ import javafx.scene.control.*;
 
 
 public class WindowDisplay extends Application{
-	
+
 	public static void main(String[] args) {
 		launch(args);
 	}
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		Users userList = initUsers();
+		User currentUser = null;
+
 		primaryStage.setTitle("Financial Assistant");
 
-		// Make users list
-		Users userList = new Users();
 
 		//Get the primary screen
 		Screen screen = Screen.getPrimary();
-		
+
 		// Set the stage dimensions to match the screen dimensions
-        primaryStage.setX(screen.getVisualBounds().getMinX());
-        primaryStage.setY(screen.getVisualBounds().getMinY());
-        primaryStage.setWidth(screen.getVisualBounds().getWidth());
-        primaryStage.setHeight(screen.getVisualBounds().getHeight());
-		
+		primaryStage.setX(screen.getVisualBounds().getMinX());
+		primaryStage.setY(screen.getVisualBounds().getMinY());
+		primaryStage.setWidth(screen.getVisualBounds().getWidth());
+		primaryStage.setHeight(screen.getVisualBounds().getHeight());
+
 		// Create your JavaFX content (e.g., a scene with a layout)
 
 		// Grid Setup
@@ -74,15 +75,20 @@ public class WindowDisplay extends Application{
 		b1.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				if((userList.getUser(String.valueOf(userTextField.getCharacters())) == null) && (String.valueOf(pwBox.getCharacters())).length() > 0 ) {
-					userList.addUser(new User(String.valueOf(userTextField.getCharacters()), String.valueOf(pwBox.getCharacters())));
+				String user = userTextField.getText();
+				String pw = pwBox.getText();
+				if ((userList.getUser(user) == null) && (user.length() > 0) && (pw.length() > 0)) {
+					createNewUser(userList, user, pw);
+					userTextField.clear();
+					pwBox.clear();
 					createError.setText("");
 					return;
 				}
-				if((String.valueOf(pwBox.getCharacters())).length() <= 0){
+				if (pw.length() <= 0){
 					createError.setText("Error: Password Needed");
-				}
-				else{
+				} else if (user.length() == 0) {
+					createError.setText("Error: Username Needed");
+				} else{
 					createError.setText("Error: User with that name already exists");
 				}
 			}
@@ -117,18 +123,21 @@ public class WindowDisplay extends Application{
 		b2.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				if((userList.getUser(String.valueOf(userTextField2.getCharacters())) == null)){
+				//return 0 means incorrect username
+				//return 1 means incorrect password
+				//return 2 means successful login
+				int loginOutcome = attemptLogin(userList, currentUser, userTextField2.getText(), pwBox2.getText());
+				if(loginOutcome == 0){
 					loginError.setText("Error: User does not exist");
 					loginError.setFill(Color.DARKRED);
 					return;
-
 				}
-				if(userList.getUser(String.valueOf(userTextField2.getCharacters())) != null && !(userList.getUser(String.valueOf(userTextField2.getCharacters())).getPassword().equals(String.valueOf(pwBox2.getCharacters())))){
+				if(loginOutcome == 1){
 					loginError.setText("Error: Password Incorrect");
 					loginError.setFill(Color.DARKRED);
 					return;
 				}
-				if(userList.getUser(String.valueOf(userTextField2.getCharacters())) != null && (userList.getUser(String.valueOf(userTextField2.getCharacters())).getPassword().equals(String.valueOf(pwBox2.getCharacters())))){
+				if(loginOutcome == 2){
 					loginError.setText("Login Successful!");
 					loginError.setFill(Color.DARKGREEN);
 					return;
@@ -138,14 +147,57 @@ public class WindowDisplay extends Application{
 
 
 		// Commented out while working on ui
-        //Group root = new Group(grid);
+		//Group root = new Group(grid);
 
-        Scene scene = new Scene(grid,250, 500);
-        // Add your content to the scene
+		Scene scene = new Scene(grid,250, 500);
+		// Add your content to the scene
 
 		//Set the scene on the stage and show the stage
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
 
+	//Initializes users list and reads in saved user data
+	private Users initUsers()
+	{
+		//Initialize Users
+		Users users = new Users();
+		System.out.println("test1");
+
+		//Read in user data from text document to load login information, etc
+		users.loadData();
+		System.out.println("test2");
+
+		return users;
+	}
+
+	//Creates new user with given name and password
+	private void createNewUser(Users users, String name, String password)
+	{
+		if (users.getUser(name) != null) {
+			System.out.println("Username already registered.");
+			return;
+		}
+		users.addNewUser(new User(name, password));
+		System.out.println("New user created with name " + name + " and password " + password);
+	}
+
+	//return 0 means incorrect username
+	//return 1 means incorrect password
+	//return 2 means successful login
+	private int attemptLogin(Users users, User currentUser, String name, String password)
+	{
+		//find
+		User target = users.getUser(name);
+		if (target != null) {
+			if (target.getPassword().equals(password)) {
+				currentUser = target;
+				return 2;
+			} else {
+				return 1;
+			}
+		} else {
+			return 0;
+		}
+	}
 }
