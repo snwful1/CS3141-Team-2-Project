@@ -17,10 +17,10 @@ public class Users {
         userList.remove(user);
     }
 
-    // Get a user by userID
-    public User getUser(int userID) {
+    // Get a user by username
+    public User getUser(String username) {
         for (User user : userList) {
-            if (user.getUserID() == userID) {
+            if (user.getName().equals(username)) {
                 return user;
             }
         }
