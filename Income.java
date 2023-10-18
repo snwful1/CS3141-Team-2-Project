@@ -7,12 +7,12 @@ public class Income {
 
     private String name;
     private double amount;
-    private int frequencyInDay;
+    private int frequencyInDays;
 
-    public Income (String name, double amount, int frequencyInDay){
+    public Income (String name, double amount, int frequencyInDays){
         this.name = name;
         this.amount = amount;
-        this.frequencyInDay = frequencyInDay;
+        this.frequencyInDays = frequencyInDays;
     }
 
     //getters and setters
@@ -24,8 +24,8 @@ public class Income {
         return amount;
     }
 
-    public int getFrequencyInDay() {
-        return frequencyInDay;
+    public int getFrequencyInDays() {
+        return frequencyInDays;
     }
 
     public void setName(String name){
@@ -36,8 +36,8 @@ public class Income {
         this.amount = amount;
     }
 
-    public void setFrequencyInDay(int frequencyInDay){
-        this.frequencyInDay = frequencyInDay;
+    public void setFrequencyInDays(int frequencyInDays){
+        this.frequencyInDays = frequencyInDays;
     }
 
     // toString method to represent the object as a string
@@ -46,7 +46,7 @@ public class Income {
         return "Income{" +
                 "name='" + name + '\'' +
                 ", amount=" + amount +
-                ", frequencyInDays=" + frequencyInDay +
+                ", frequencyInDays=" + frequencyInDays +
                 '}';
     }
 

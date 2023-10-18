@@ -75,21 +75,22 @@ public class WindowDisplay extends Application{
 		b1.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				String user = userTextField.getText();
-				String pw = pwBox.getText();
-				if ((userList.getUser(user) == null) && (user.length() > 0) && (pw.length() > 0)) {
-					createNewUser(userList, user, pw);
+				int createUserResult = createNewUser(userList, userTextField.getText(), pwBox.getText());
+				if (createUserResult == 0) {
+					createError.setText("New user " + userTextField.getText() + " created!");
+					createError.setFill(Color.DARKGREEN);
 					userTextField.clear();
 					pwBox.clear();
-					createError.setText("");
-					return;
 				}
-				if (pw.length() <= 0){
+				if (createUserResult == 1){
 					createError.setText("Error: Password Needed");
-				} else if (user.length() == 0) {
+					createError.setFill(Color.DARKRED);
+				} else if (createUserResult == 2) {
 					createError.setText("Error: Username Needed");
-				} else{
+					createError.setFill(Color.DARKRED);
+				} else if (createUserResult == 3) {
 					createError.setText("Error: User with that name already exists");
+					createError.setFill(Color.DARKRED);
 				}
 			}
 		});
@@ -162,26 +163,34 @@ public class WindowDisplay extends Application{
 	{
 		//Initialize Users
 		Users users = new Users();
-		System.out.println("test1");
 
 		//Read in user data from text document to load login information, etc
 		users.loadData();
-		System.out.println("test2");
 
 		return users;
 	}
 
 	//Creates new user with given name and password
-	private void createNewUser(Users users, String name, String password)
+	//return 0 means successful user creation
+	//return 1 means no username provided
+	//return 2 means no password provided
+	//return 3 means username already taken
+	private int createNewUser(Users users, String name, String pw)
 	{
-		if (users.getUser(name) != null) {
-			System.out.println("Username already registered.");
-			return;
+		if ((users.getUser(name) == null) && (name.length() > 0) && (pw.length() > 0)) {
+			users.addNewUser(new User(name, pw));
+			return 0;
+		} else if (name.length() == 0){
+			return 1;
+		} else if (pw.length() == 0) {
+			return 2;
 		}
-		users.addNewUser(new User(name, password));
-		System.out.println("New user created with name " + name + " and password " + password);
+		else {
+			return 3;
+		}
 	}
 
+	//Attempts to login with given credentials
 	//return 0 means incorrect username
 	//return 1 means incorrect password
 	//return 2 means successful login
@@ -192,6 +201,8 @@ public class WindowDisplay extends Application{
 		if (target != null) {
 			if (target.getPassword().equals(password)) {
 				currentUser = target;
+				currentUser.addNewIncome(new Income("test", 101.11, 14));
+				currentUser.addNewExpense(new Expense("test", 100.50, 7));
 				return 2;
 			} else {
 				return 1;
