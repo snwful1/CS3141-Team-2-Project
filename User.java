@@ -10,6 +10,10 @@ public class User {
     private ArrayList<Expense> expenseList;
     private ArrayList<Income> incomeList;
 
+    private String phoneNumber;
+    private String email;
+
+
     public User(String name, String password) {
         //this.userID = userID;
         this.name = name;

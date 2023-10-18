@@ -2,6 +2,7 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.text.FontWeight;
@@ -19,16 +20,17 @@ public class WindowDisplay extends Application{
 		launch(args);
 	}
 
+	private Screen screen;
+	private	Users userList = initUsers();
+	private User currentUser = null;
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		Users userList = initUsers();
-		User currentUser = null;
+
 
 		primaryStage.setTitle("Financial Assistant");
 
-
 		//Get the primary screen
-		Screen screen = Screen.getPrimary();
+		screen = Screen.getPrimary(); // Changed screen to be a private variable and accesible by all method in this class
 
 		// Set the stage dimensions to match the screen dimensions
 		primaryStage.setX(screen.getVisualBounds().getMinX());
@@ -141,21 +143,82 @@ public class WindowDisplay extends Application{
 				if(loginOutcome == 2){
 					loginError.setText("Login Successful!");
 					loginError.setFill(Color.DARKGREEN);
-					return;
+					loadAccountDetails(currentUser);
+					((Node) (event.getSource())).getScene().getWindow().hide();
 				}
 			}
 		});
 
 
+
 		// Commented out while working on ui
 		//Group root = new Group(grid);
 
-		Scene scene = new Scene(grid,250, 500);
+		Scene scene = new Scene(grid, 250, 500);
 		// Add your content to the scene
 
 		//Set the scene on the stage and show the stage
 		primaryStage.setScene(scene);
 		primaryStage.show();
+	}
+
+	//Method that load the account details tab
+	private void loadAccountDetails(User currentUser) {
+		Stage accountStage = new Stage();
+		accountStage.setTitle("Financial Assistant - Account Details");
+		accountStage.setX(screen.getVisualBounds().getMinX());
+		accountStage.setY(screen.getVisualBounds().getMinY());
+		accountStage.setWidth(screen.getVisualBounds().getWidth());
+		accountStage.setHeight(screen.getVisualBounds().getHeight());
+
+		GridPane grid2 = new GridPane();
+		grid2.setAlignment(Pos.TOP_CENTER);
+		grid2.setHgap(5);
+		grid2.setVgap(10);
+		grid2.setPadding(new Insets(25, 25, 25, 25));
+
+		Text userDetails = new Text("Account Details");
+		userDetails.setFont(Font.font("TimesRoman", FontWeight.BOLD, 30));
+		grid2.add(userDetails, 0, 0, 2, 1);
+
+		Label username = new Label("Username: " +currentUser.getName());
+		grid2.add(username, 0, 1);
+
+		Label password = new Label("Password: " +currentUser.getPassword());
+		grid2.add(password, 0, 2);
+		Button b1 = new Button("Change Password");
+		HBox h1 = new HBox(10);
+		h1.setAlignment(Pos.CENTER_RIGHT);
+		h1.getChildren().add(b1);
+		grid2.add(h1, 1, 2);
+
+		Label email = new Label("Email:");
+		grid2.add(email, 0, 3);
+
+		Label phoneNumber = new Label("Phone Number:");
+		grid2.add(phoneNumber, 0, 4);
+
+	/*
+	// User Creator Labels and Textfields
+		Text userCreation = new Text("Create User");
+		userCreation.setFont(Font.font("TimesRoman", FontWeight.BOLD, 30));
+		grid.add(userCreation, 0, 0, 2, 1);
+
+		Label userName = new Label("New Username:");
+		grid.add(userName, 0, 1);
+		TextField userTextField = new TextField();
+		grid.add(userTextField, 1, 1);
+
+		Label pw = new Label("New Password:");
+		grid.add(pw, 0, 2);
+		PasswordField pwBox = new PasswordField();
+		grid.add(pwBox, 1, 2);
+	 */
+
+		Scene account = new Scene(grid2, 250, 500);
+		accountStage.setScene(account);
+		accountStage.show();
+		return;
 	}
 
 	//Initializes users list and reads in saved user data
@@ -200,6 +263,7 @@ public class WindowDisplay extends Application{
 		User target = users.getUser(name);
 		if (target != null) {
 			if (target.getPassword().equals(password)) {
+				this.currentUser = target;
 				currentUser = target;
 				currentUser.addNewIncome(new Income("test", 101.11, 14));
 				currentUser.addNewExpense(new Expense("test", 100.50, 7));
