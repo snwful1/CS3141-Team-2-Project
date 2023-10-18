@@ -198,27 +198,9 @@ public class WindowDisplay extends Application{
 		Label phoneNumber = new Label("Phone Number:");
 		grid2.add(phoneNumber, 0, 4);
 
-	/*
-	// User Creator Labels and Textfields
-		Text userCreation = new Text("Create User");
-		userCreation.setFont(Font.font("TimesRoman", FontWeight.BOLD, 30));
-		grid.add(userCreation, 0, 0, 2, 1);
-
-		Label userName = new Label("New Username:");
-		grid.add(userName, 0, 1);
-		TextField userTextField = new TextField();
-		grid.add(userTextField, 1, 1);
-
-		Label pw = new Label("New Password:");
-		grid.add(pw, 0, 2);
-		PasswordField pwBox = new PasswordField();
-		grid.add(pwBox, 1, 2);
-	 */
-
 		Scene account = new Scene(grid2, 250, 500);
 		accountStage.setScene(account);
 		accountStage.show();
-		return;
 	}
 
 	//Initializes users list and reads in saved user data
