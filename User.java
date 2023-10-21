@@ -9,7 +9,6 @@ public class User {
     private String password;
     private ArrayList<Expense> expenseList;
     private ArrayList<Income> incomeList;
-
     private String phoneNumber;
     private String email;
 
@@ -29,6 +28,10 @@ public class User {
     public String getPassword() {
         return password;
     }
+
+    public ArrayList<Expense> getExpenseList() {return expenseList;}
+
+    public ArrayList<Income> getIncomeList() {return incomeList;}
 
     public void setPassword(String password) {
         this.password = password;
@@ -90,6 +93,19 @@ public class User {
         }
     }
 
+    public void addNewBalance(double b) {
+
+        //Add expense to user file
+        try {
+            FileWriter myWriter = new FileWriter(name + ".txt", true);
+            myWriter.write(b + "\n");
+            myWriter.close();
+        } catch (IOException err) {
+            System.out.println("Failed to write user data");
+            err.printStackTrace();
+        }
+    }
+
     public void loadUserData() {
         File usersFile = new File(name + ".txt");
         Scanner input = null;
@@ -107,6 +123,12 @@ public class User {
         String name = null;
         double amount = 0;
         int frequency = 0;
+        double balance = 0;
+
+        if (input.hasNext()) {
+            balance = input.nextDouble();
+        }
+
         while (input.hasNextLine()) {
             if (input.hasNext()) {
                 type = input.next();

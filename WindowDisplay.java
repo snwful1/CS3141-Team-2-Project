@@ -13,6 +13,11 @@ import javafx.geometry.*;
 import javafx.scene.text.*;
 import javafx.scene.control.*;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+
 
 public class WindowDisplay extends Application{
 
@@ -30,7 +35,7 @@ public class WindowDisplay extends Application{
 		primaryStage.setTitle("Financial Assistant");
 
 		//Get the primary screen
-		screen = Screen.getPrimary(); // Changed screen to be a private variable and accesible by all method in this class
+		screen = Screen.getPrimary(); // Changed screen to be a private variable and accessible by all method in this class
 
 		// Set the stage dimensions to match the screen dimensions
 		primaryStage.setX(screen.getVisualBounds().getMinX());
@@ -85,10 +90,10 @@ public class WindowDisplay extends Application{
 					pwBox.clear();
 				}
 				if (createUserResult == 1){
-					createError.setText("Error: Password Needed");
+					createError.setText("Error: Username Needed");
 					createError.setFill(Color.DARKRED);
 				} else if (createUserResult == 2) {
-					createError.setText("Error: Username Needed");
+					createError.setText("Error: Password Needed");
 					createError.setFill(Color.DARKRED);
 				} else if (createUserResult == 3) {
 					createError.setText("Error: User with that name already exists");
@@ -165,14 +170,15 @@ public class WindowDisplay extends Application{
 	//Method that load the account details tab
 	private void loadAccountDetails(User currentUser) {
 		Stage accountStage = new Stage();
-		accountStage.setTitle("Financial Assistant - Account Details");
+		accountStage.setTitle("Financial Assistant");
 		accountStage.setX(screen.getVisualBounds().getMinX());
 		accountStage.setY(screen.getVisualBounds().getMinY());
 		accountStage.setWidth(screen.getVisualBounds().getWidth());
 		accountStage.setHeight(screen.getVisualBounds().getHeight());
 
+		// Account details grid
 		GridPane grid2 = new GridPane();
-		grid2.setAlignment(Pos.TOP_CENTER);
+		grid2.setAlignment(Pos.TOP_LEFT);
 		grid2.setHgap(5);
 		grid2.setVgap(10);
 		grid2.setPadding(new Insets(25, 25, 25, 25));
@@ -186,21 +192,197 @@ public class WindowDisplay extends Application{
 
 		Label password = new Label("Password: " +currentUser.getPassword());
 		grid2.add(password, 0, 2);
-		Button b1 = new Button("Change Password");
-		HBox h1 = new HBox(10);
-		h1.setAlignment(Pos.CENTER_RIGHT);
-		h1.getChildren().add(b1);
-		grid2.add(h1, 1, 2);
+		Button b3 = new Button("Change Password");
+		HBox h3 = new HBox(10);
+		h3.setAlignment(Pos.CENTER_RIGHT);
+		h3.getChildren().add(b3);
+		grid2.add(h3, 1, 2);
 
 		Label email = new Label("Email:");
-		grid2.add(email, 0, 3);
+		//grid2.add(email, 0, 3);
 
 		Label phoneNumber = new Label("Phone Number:");
-		grid2.add(phoneNumber, 0, 4);
+		//grid2.add(phoneNumber, 0, 4);
 
-		Scene account = new Scene(grid2, 250, 500);
+		// Financial info grid
+		GridPane grid3 = new GridPane();
+		grid3.setAlignment(Pos.TOP_CENTER);
+		grid3.setHgap(5);
+		grid3.setVgap(10);
+		grid3.setPadding(new Insets(25,25,25,25));
+
+		Text balanceText = new Text("Finances");
+		balanceText.setFont(Font.font("TimesRoman", FontWeight.BOLD, 30));
+		grid3.add(balanceText,0,0,2,1);
+
+		Scanner dataScan = null;
+		try {
+			File dataFile = new File(currentUser.getName() + ".txt");
+			dataScan = new Scanner(dataFile);
+		} catch (IOException e) {
+			System.out.println("Failed to load users' data");
+			e.printStackTrace();
+		}
+
+		double balanceVal = dataScan.nextDouble();
+		dataScan.close();
+		Label balanceLabel = new Label("Balance: " + balanceVal);
+		grid3.add(balanceLabel, 0, 1);
+
+		Label setBalance = new Label("Set Balance");
+		grid3.add(setBalance,0,2);
+		TextField setBalanceT = new TextField();
+		grid3.add(setBalanceT,1,2);
+
+		Button b4 = new Button("Set Balance");
+		HBox h4 = new HBox(10);
+		h4.setAlignment(Pos.CENTER_RIGHT);
+		h4.getChildren().add(b4);
+		grid3.add(h4, 2, 2);
+
+		b4.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				if(Double.parseDouble(setBalanceT.getText())>= 0){
+					balanceLabel.setText("Balance: " + Double.parseDouble(setBalanceT.getText()));
+					try{
+						FileWriter myWriter = new FileWriter(currentUser.getName() + ".txt", false);
+						myWriter.write(setBalanceT.getText() +"\n");
+
+						Income i = currentUser.getIncomeList().get(0);
+						myWriter.write("Income: " + i.getName() + " " + i.getAmount() + " " + i.getFrequencyInDays() + "\n");
+						Expense e = currentUser.getExpenseList().get(0); // hardcoded for 1, need loop to get more
+						myWriter.write("Expense: " + e.getName() + " " + e.getAmount() + " " + e.getFrequencyInDays() + "\n");
+						myWriter.close();
+					}catch (IOException e) {
+						System.out.println("Failed to write user data");
+						e.printStackTrace();
+					}
+
+				}
+			}
+		});
+
+		// income
+		Income i = currentUser.getIncomeList().get(0);
+		Text incomeText = new Text("Income");
+		incomeText.setFont(Font.font("TimesRoman", FontWeight.BOLD, 30));
+		grid3.add(incomeText,0,3,2,1);
+
+		Label incomeNLabel = new Label("Income Name: " + i.getName());
+		grid3.add(incomeNLabel, 0, 4);
+
+		Label incomeALabel = new Label("Income Amount: $" + i.getAmount());
+		grid3.add(incomeALabel, 0, 5);
+
+		Label incomeFLabel = new Label("Income Frequency: " + i.getFrequencyInDays() + " days");
+		grid3.add(incomeFLabel, 0, 6);
+
+		Button b5 = new Button("Apply Manually");
+		HBox h5 = new HBox(10);
+		h5.setAlignment(Pos.CENTER_RIGHT);
+		h5.getChildren().add(b5);
+		grid3.add(h5, 0, 7);
+
+		b5.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+
+				Scanner dataScan = null;
+				try {
+					File dataFile = new File(currentUser.getName() + ".txt");
+					dataScan = new Scanner(dataFile);
+				} catch (IOException e) {
+					System.out.println("Failed to load users' data");
+					e.printStackTrace();
+				}
+
+				double balanceVal = dataScan.nextDouble() + i.getAmount();
+				dataScan.close();
+				String str = String.format("Balance: %.2f", balanceVal);
+				balanceLabel.setText(str);
+
+				try{
+					FileWriter myWriter = new FileWriter(currentUser.getName() + ".txt", false);
+					myWriter.write(balanceVal +"\n");
+
+					Income i = currentUser.getIncomeList().get(0);
+					myWriter.write("Income: " + i.getName() + " " + i.getAmount() + " " + i.getFrequencyInDays() + "\n");
+					Expense e = currentUser.getExpenseList().get(0); // hardcoded for 1, need loop to get more
+					myWriter.write("Expense: " + e.getName() + " " + e.getAmount() + " " + e.getFrequencyInDays() + "\n");
+					myWriter.close();
+				}catch (IOException e) {
+					System.out.println("Failed to write user data");
+					e.printStackTrace();
+				}
+
+
+			}
+		});
+
+		// expense
+		Expense e = currentUser.getExpenseList().get(0);
+		Text expenseText = new Text("Expense");
+		expenseText.setFont(Font.font("TimesRoman", FontWeight.BOLD, 30));
+		grid3.add(expenseText,0,9,2,1);
+
+		Label expenseNLabel = new Label("Expense Name: " + e.getName());
+		grid3.add(expenseNLabel, 0, 10);
+
+		Label expenseALabel = new Label("Expense Amount: $" + e.getAmount());
+		grid3.add(expenseALabel, 0, 11);
+
+		Label expenseFLabel = new Label("Expense Frequency: " + e.getFrequencyInDays() + " days");
+		grid3.add(expenseFLabel, 0, 12);
+
+		Button b6 = new Button("Apply Manually");
+		HBox h6 = new HBox(10);
+		h6.setAlignment(Pos.CENTER_RIGHT);
+		h6.getChildren().add(b6);
+		grid3.add(h6, 0, 13);
+
+		b6.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+
+				Scanner dataScan = null;
+				try {
+					File dataFile = new File(currentUser.getName() + ".txt");
+					dataScan = new Scanner(dataFile);
+				} catch (IOException e) {
+					System.out.println("Failed to load users' data");
+					e.printStackTrace();
+				}
+
+				double balanceVal = dataScan.nextDouble() - e.getAmount();
+				dataScan.close();
+				String str = String.format("Balance: %.2f", balanceVal);
+				balanceLabel.setText(str);
+
+				try{
+					FileWriter myWriter = new FileWriter(currentUser.getName() + ".txt", false);
+					myWriter.write(balanceVal +"\n");
+
+					Income i = currentUser.getIncomeList().get(0);
+					myWriter.write("Income: " + i.getName() + " " + i.getAmount() + " " + i.getFrequencyInDays() + "\n");
+					Expense e = currentUser.getExpenseList().get(0); // hardcoded for 1, need loop to get more
+					myWriter.write("Expense: " + e.getName() + " " + e.getAmount() + " " + e.getFrequencyInDays() + "\n");
+					myWriter.close();
+				}catch (IOException e) {
+					System.out.println("Failed to write user data");
+					e.printStackTrace();
+				}
+
+
+			}
+		});
+
+
+		// scene setup
+		Scene account = new Scene(grid3, 250, 500);
 		accountStage.setScene(account);
 		accountStage.show();
+
 	}
 
 	//Initializes users list and reads in saved user data
@@ -224,6 +406,10 @@ public class WindowDisplay extends Application{
 	{
 		if ((users.getUser(name) == null) && (name.length() > 0) && (pw.length() > 0)) {
 			users.addNewUser(new User(name, pw));
+			User target = users.getUser(name);
+			target.addNewBalance(0.00);
+			target.addNewIncome(new Income("test", 101.11, 14));
+			target.addNewExpense(new Expense("test", 100.50, 7));
 			return 0;
 		} else if (name.length() == 0){
 			return 1;
@@ -247,8 +433,8 @@ public class WindowDisplay extends Application{
 			if (target.getPassword().equals(password)) {
 				this.currentUser = target;
 				currentUser = target;
-				currentUser.addNewIncome(new Income("test", 101.11, 14));
-				currentUser.addNewExpense(new Expense("test", 100.50, 7));
+				//currentUser.addNewIncome(new Income("test", 101.11, 14));
+				//currentUser.addNewExpense(new Expense("test", 100.50, 7));
 				return 2;
 			} else {
 				return 1;
