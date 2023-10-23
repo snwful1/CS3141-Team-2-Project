@@ -1,3 +1,7 @@
+/*
+ * Author(s): Samuel Wright,
+ * Date: 10-16-2023
+ */
 import java.util.List;
 
 public class ExpenseTracker {
