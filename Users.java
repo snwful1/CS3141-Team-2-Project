@@ -1,16 +1,7 @@
 /*
  * Author(s): Samuel Wright,
- * Date: 10-16-2023
- *
- * Description: The `Users` class is part of a personal finance management system that facilitates user management
- * and provides essential functionality for handling user data. It acts as a repository for user objects and allows
- * for user addition, removal, retrieval by username, and user count retrieval.
- *
- * Key Features:
- * - Add a user to the list
- * - Remove a user from the list
- * - Retrieve a user by their username
- * - Get the total number of users in the list
+ * Created: 10-16-2023
+ * Last Updated: 10-22-2023
  */
 
 import java.io.File;
@@ -97,9 +88,4 @@ public class Users {
         }
         input.close();
     }
-
-    public static void main(String[] args) {
-
-    }
 }
-
