@@ -1,3 +1,8 @@
+/*
+ * Author(s): Samuel Wright, Evan Bradford
+ * Last Updated: 10-22-2023
+ */
+
 import java.io.File;
 import java.util.ArrayList;
 import java.io.FileWriter;
@@ -12,9 +17,7 @@ public class User {
     private String phoneNumber;
     private String email;
 
-
     public User(String name, String password) {
-        //this.userID = userID;
         this.name = name;
         this.password = password;
         incomeList = new ArrayList<Income>();
@@ -29,9 +32,13 @@ public class User {
         return password;
     }
 
-    public ArrayList<Expense> getExpenseList() {return expenseList;}
+    public ArrayList<Expense> getExpenseList() {
+        return expenseList;
+    }
 
-    public ArrayList<Income> getIncomeList() {return incomeList;}
+    public ArrayList<Income> getIncomeList() {
+        return incomeList;
+    }
 
     public void setPassword(String password) {
         this.password = password;
@@ -42,8 +49,6 @@ public class User {
     }
 
     public void initUser() {
-
-        //File userFile = new File("/bin/userdata/" + name + ".txt");
         File userFile = new File(name + ".txt");
         File userDir = new File("/bin/userdata");
 
@@ -94,7 +99,6 @@ public class User {
     }
 
     public void addNewBalance(double b) {
-
         //Add expense to user file
         try {
             FileWriter myWriter = new FileWriter(name + ".txt", true);
@@ -144,5 +148,4 @@ public class User {
         }
         input.close();
     }
-
 }
