@@ -1,3 +1,8 @@
+/*
+ * Author(s): 
+ * Last Updated: 10-23-2023
+ */
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
