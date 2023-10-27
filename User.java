@@ -112,8 +112,6 @@ public class User {
 
     public void loadUserData() {
         File usersFile = new File(name + ".txt");
-        //File usersFileDecyrpt = new File(name + ".decrypted");
-        //EncryptionUtils.decyrpt("", usersFile, usersFileDecyrpt);
         Scanner input = null;
 
 
@@ -121,7 +119,7 @@ public class User {
         //Create file if it does not exist and open with scanner
         try {
             usersFile.createNewFile();
-            input = new Scanner(usersFile);//Decyrpt);
+            input = new Scanner(usersFile);
         } catch (IOException e) {
             System.out.println("Failed to load users' data");
             e.printStackTrace();
@@ -151,6 +149,5 @@ public class User {
             } else {break;}
         }
         input.close();
-        //EncryptionUtils.encrypt("", usersFileDecyrpt, usersFile);
     }
 }

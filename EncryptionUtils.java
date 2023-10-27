@@ -15,15 +15,15 @@ public class EncryptionUtils {
     private static final String algo = "AES";
     private static final String trans = "AES";
 
-    public static void encrypt(String key, File input, File output) {
-        doCryto(Cipher.ENCRYPT_MODE, key, input, output);
+    public static void encrypt(String key, File input) {
+        doCryto(Cipher.ENCRYPT_MODE, key, input);
     }
 
-    public static void decyrpt(String key, File input, File output) {
-        doCryto(Cipher.DECRYPT_MODE, key, input, output);
+    public static void decyrpt(String key, File input) {
+        doCryto(Cipher.DECRYPT_MODE, key, input);
     }
 
-    private static void doCryto(int mode, String key, File input, File output) {
+    private static void doCryto(int mode, String key, File input) {
         try {
             Key secretKey = new SecretKeySpec(key.getBytes(), algo);
             Cipher cipher = Cipher.getInstance(trans);
@@ -34,7 +34,7 @@ public class EncryptionUtils {
 
             byte[] outputBytes = cipher.doFinal(inputBytes);
 
-            FileOutputStream outputStream = new FileOutputStream(output);
+            FileOutputStream outputStream = new FileOutputStream(input);
             outputStream.write(outputBytes);
 
 
