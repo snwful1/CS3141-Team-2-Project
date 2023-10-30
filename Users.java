@@ -9,45 +9,100 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Users {
     private ArrayList<User> userList;
     private final String KEY = "abcdefghijklmnop"; // Key *MUST* be 16 bytes long
+    private HashMap<String, String> USERS = new HashMap<>(); // <Username, Password>
+    private final File usersFile = new File("output/users.txt");
 
     public Users() {
         userList = new ArrayList<>();
-    }
+        new File("output").getAbsoluteFile().mkdirs();
+        if(!usersFile.exists()) {
+            try {
+                usersFile.createNewFile();
+            } catch (IOException e) {
+                throw new RuntimeException("users.txt was not created. ", e);
+            }
+        }
 
-    // Add a user to the list
-    public void addUser(User user) {
-        userList.add(user);
-    }
-
-    public void addNewUser(User user) {
-        userList.add(user);
-
-        //Write user login to file
-        try {
-            File usersFile = new File("users.txt");
+        if(usersFile.exists()) {
             EncryptionUtils.decyrpt(KEY, usersFile);
-            FileWriter myWriter = new FileWriter(usersFile);
 
-            myWriter.write("\n" + user.getName() + " " + user.getPassword());
-            myWriter.close();
+            Scanner input = null;
+            try {
+                input = new Scanner(usersFile);
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException("users.txt was not found.", e);
+            }
+
+            while(input.hasNextLine()) {
+                if(input.hasNext()) {
+                    String name = input.next();
+                    User newUser = new User(name);
+                    userList.add(newUser);
+                    USERS.put(name, input.next());
+                    newUser.initUser();
+                    newUser.loadUserData();
+                } else
+                    break;
+            }
+            input.close();
             EncryptionUtils.encrypt(KEY, usersFile);
-        } catch (IOException e) {
-            System.out.println("Failed to write user data");
-            e.printStackTrace();
         }
     }
 
-    // Remove a user from the list
-    public void removeUser(User user) {
-        userList.remove(user);
+    /**
+     * This method writes the contents of the USERS hashmap to an encrypted txt file
+     */
+    public void save() {
+        EncryptionUtils.decyrpt(KEY, usersFile);
+        try {
+            FileWriter myWriter = new FileWriter(usersFile);
+            USERS.forEach( (name, password) -> {
+                try {
+                    myWriter.write(name + " " + password + "\n");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            myWriter.close();
+        } catch (IOException e) {
+            throw new RuntimeException("users.txt was not found.", e);
+        }
+        EncryptionUtils.encrypt(KEY, usersFile);
     }
 
-    // Get a user by username
+    /**
+     * Creates a new User and inputs it into arraylist and adds username and password to USERS hashmap
+     * @param name User's input name
+     * @param password User's input password
+     * @return The new User
+     */
+    public User newUser(String name, String password) {
+        User user = new User(name);
+        userList.add(user);
+        USERS.put(name, password);
+        return user;
+    }
+
+    /**
+     * Remove a User from the list
+     * @param user The User to remove
+     */
+    public void removeUser(User user) {
+        userList.remove(user);
+        // Todo: implement the removal of the users hashMap
+    }
+
+    /**
+     * Get a User by username
+     * @param username The username of the User
+     * @return The User that has matching username
+     */
     public User getUser(String username) {
         for (User user : userList) {
             if (user.getName().equals(username)) {
@@ -57,40 +112,34 @@ public class Users {
         return null; // User not found
     }
 
-    // Get the number of users in the list
+    public HashMap<String, String> getList() {
+        return USERS;
+    }
+
+    /**
+     * Changes password of user's hashmap
+     * @param name The username of the User
+     * @param newPassword The new password
+     */
+    public void setPassword(String name, String newPassword) {
+        // Todo: implement the change of password in the hashmap
+    }
+
+    /**
+     *  Changes username of User and their hashmap
+     * @param oldName The old username of User
+     * @param newName The new username of User
+     */
+    public void setName(String oldName, String newName) {
+        // Todo: implement the change of username in hashmap and User
+    }
+
+    /**
+     * Get the number of users in the Arraylist userList
+     * @return The number of users
+     */
     public int size() {
         return userList.size();
     }
 
-    //Read in user logins from text document
-    public void loadData() throws IOException {
-        //I could not get the mkdirs() to actually create the directory
-        //File usersFile = new File("/bin/users.txt");
-        File usersFile = new File("users.txt");
-        File binDir = new File("/bin");
-        //Make files if they don't exist.
-        if(!usersFile.exists()) {
-            binDir.mkdirs();
-            usersFile.createNewFile();
-        }
-
-        EncryptionUtils.decyrpt(KEY, usersFile);
-        Scanner input = new Scanner(usersFile);
-
-        //Read in user id, name, and password and add user to the list
-        String name = null;
-        String password = null;
-        while (input.hasNextLine()) {
-            if (input.hasNext()) {
-                name = input.next();
-                password = input.next();
-                User newUser = new User(name, password);
-                addUser(newUser);
-                newUser.initUser();
-                newUser.loadUserData();
-            } else {break;}
-        }
-        input.close();
-        EncryptionUtils.encrypt(KEY, usersFile);
-    }
 }

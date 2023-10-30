@@ -25,18 +25,20 @@ import java.io.IOException;
 import java.util.Scanner;
 
 
-public class WindowDisplay extends Application{
+public class WindowDisplay extends Application {
 
 	public static void main(String[] args) {
 		launch(args);
 	}
 
-	private Screen screen;
-	private	Users userList = initUsers();
+	private Screen screen = null;
+	private	Users userList = null;
 	private User currentUser = null;
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
+		userList = new Users();
 
 		primaryStage.setTitle("Financial Assistant");
 
@@ -173,6 +175,11 @@ public class WindowDisplay extends Application{
 		primaryStage.show();
 	}
 
+	@Override
+	public void stop() throws Exception {
+		userList.save();
+	}
+
 	//Method that loads the account details tab
 	private void loadAccountDetails(User currentUser) {
 		Stage accountStage = new Stage();
@@ -196,7 +203,7 @@ public class WindowDisplay extends Application{
 		Label username = new Label("Username: " +currentUser.getName());
 		grid2.add(username, 0, 1);
 
-		Label password = new Label("Password: " +currentUser.getPassword());
+		Label password = new Label("Password: " +userList.getList().get(currentUser.getName()));
 		grid2.add(password, 0, 2);
 		Button b3 = new Button("Change Password");
 		HBox h3 = new HBox(10);
@@ -223,7 +230,7 @@ public class WindowDisplay extends Application{
 
 		Scanner dataScan = null;
 		try {
-			File dataFile = new File(currentUser.getName() + ".txt");
+			File dataFile = new File("output/userdata/" + currentUser.getName() + ".txt");
 			dataScan = new Scanner(dataFile);
 		} catch (IOException e) {
 			System.out.println("Failed to load users' data");
@@ -252,7 +259,7 @@ public class WindowDisplay extends Application{
 				if(Double.parseDouble(setBalanceT.getText())>= 0){
 					balanceLabel.setText("Balance: " + Double.parseDouble(setBalanceT.getText()));
 					try{
-						FileWriter myWriter = new FileWriter(currentUser.getName() + ".txt", false);
+						FileWriter myWriter = new FileWriter("output/userdata/" +currentUser.getName() + ".txt", false);
 						myWriter.write(setBalanceT.getText() +"\n");
 
 						Income i = currentUser.getIncomeList().get(0);
@@ -296,7 +303,7 @@ public class WindowDisplay extends Application{
 
 				Scanner dataScan = null;
 				try {
-					File dataFile = new File(currentUser.getName() + ".txt");
+					File dataFile = new File("output/userdata/" + currentUser.getName() + ".txt");
 					dataScan = new Scanner(dataFile);
 				} catch (IOException e) {
 					System.out.println("Failed to load users' data");
@@ -309,7 +316,7 @@ public class WindowDisplay extends Application{
 				balanceLabel.setText(str);
 
 				try{
-					FileWriter myWriter = new FileWriter(currentUser.getName() + ".txt", false);
+					FileWriter myWriter = new FileWriter("output/userdata/" + currentUser.getName() + ".txt", false);
 					myWriter.write(balanceVal +"\n");
 
 					Income i = currentUser.getIncomeList().get(0);
@@ -416,7 +423,7 @@ public class WindowDisplay extends Application{
 
 				Scanner dataScan = null;
 				try {
-					File dataFile = new File(currentUser.getName() + ".txt");
+					File dataFile = new File("output/userdata/" +currentUser.getName() + ".txt");
 					dataScan = new Scanner(dataFile);
 				} catch (IOException e) {
 					System.out.println("Failed to load users' data");
@@ -429,7 +436,7 @@ public class WindowDisplay extends Application{
 				balanceLabel.setText(str);
 
 				try{
-					FileWriter myWriter = new FileWriter(currentUser.getName() + ".txt", false);
+					FileWriter myWriter = new FileWriter("output/userdata/" +currentUser.getName() + ".txt", false);
 					myWriter.write(balanceVal +"\n");
 
 					Income i = currentUser.getIncomeList().get(0);
@@ -454,22 +461,6 @@ public class WindowDisplay extends Application{
 
 	}
 
-	//Initializes users list and reads in saved user data
-	private Users initUsers()
-	{
-		//Initialize Users
-		Users users = new Users();
-
-		//Read in user data from text document to load login information, etc
-		try {
-			users.loadData();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-
-		return users;
-	}
-
 	//Creates new user with given name and password
 	//return 0 means successful user creation
 	//return 1 means no username provided
@@ -478,8 +469,7 @@ public class WindowDisplay extends Application{
 	private int createNewUser(Users users, String name, String pw)
 	{
 		if ((users.getUser(name) == null) && (name.length() > 0) && (pw.length() > 0)) {
-			users.addNewUser(new User(name, pw));
-			User target = users.getUser(name);
+			User target = users.newUser(name, pw);
 			target.addNewBalance(0.00);
 			target.addNewIncome(new Income("test", 101.11, 14));
 			target.addNewExpense(new Expense("test", 100.50, 7));
@@ -503,7 +493,7 @@ public class WindowDisplay extends Application{
 		//find
 		User target = users.getUser(name);
 		if (target != null) {
-			if (target.getPassword().equals(password)) {
+			if ((users.getList().get(name)).equals(password)) {
 				this.currentUser = target;
 				currentUser = target;
 				//currentUser.addNewIncome(new Income("test", 101.11, 14));

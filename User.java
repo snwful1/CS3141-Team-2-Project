@@ -11,25 +11,20 @@ import java.util.Scanner;
 
 public class User {
     private String name;
-    private String password;
     private ArrayList<Expense> expenseList;
     private ArrayList<Income> incomeList;
     private String phoneNumber;
     private String email;
 
-    public User(String name, String password) {
+    public User(String name) { //, String password
         this.name = name;
-        this.password = password;
         incomeList = new ArrayList<Income>();
         expenseList = new ArrayList<Expense>();
+        initUser();
     }
 
     public String getName() {
         return name;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public ArrayList<Expense> getExpenseList() {
@@ -40,21 +35,17 @@ public class User {
         return incomeList;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public void changeName(String newName) {
         this.name = newName;
     }
 
     public void initUser() {
-        File userFile = new File(name + ".txt");
-        File userDir = new File("/bin/userdata");
+        File userFile = new File("output/userdata/"+name + ".txt");
+        File userDir = new File("output/userdata");
 
         //Create file if it does not exist and write all incomes and expenses
         try {
-            userDir.mkdirs();
+            userDir.getAbsoluteFile().mkdirs();
             userFile.createNewFile();
         } catch (IOException e) {
             System.out.println("Failed to create user file");
@@ -75,7 +66,7 @@ public class User {
 
         //Add income to user file
         try {
-            FileWriter myWriter = new FileWriter(name + ".txt", true);
+            FileWriter myWriter = new FileWriter("output/userdata/"+name + ".txt", true);
             myWriter.write("Income: "  + i.getName() + " " + i.getAmount() + " " + i.getFrequencyInDays() + "\n");
             myWriter.close();
         } catch (IOException e) {
@@ -89,7 +80,7 @@ public class User {
 
         //Add expense to user file
         try {
-            FileWriter myWriter = new FileWriter(name + ".txt", true);
+            FileWriter myWriter = new FileWriter("output/userdata/"+name + ".txt", true);
             myWriter.write("Expense: "  + e.getName() + " " + e.getAmount() + " " + e.getFrequencyInDays() + "\n");
             myWriter.close();
         } catch (IOException err) {
@@ -101,7 +92,7 @@ public class User {
     public void addNewBalance(double b) {
         //Add expense to user file
         try {
-            FileWriter myWriter = new FileWriter(name + ".txt", true);
+            FileWriter myWriter = new FileWriter("output/userdata/"+name + ".txt", true);
             myWriter.write(b + "\n");
             myWriter.close();
         } catch (IOException err) {
@@ -111,7 +102,7 @@ public class User {
     }
 
     public void loadUserData() {
-        File usersFile = new File(name + ".txt");
+        File usersFile = new File("output/userdata/"+name + ".txt");
         Scanner input = null;
 
 
