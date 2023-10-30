@@ -29,7 +29,7 @@ public class Expense{
         return amount;
     }
 
-    public void getAmount(double amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 
