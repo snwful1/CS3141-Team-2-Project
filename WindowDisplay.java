@@ -410,8 +410,6 @@ public class WindowDisplay extends Application{
 			}
 		});
 
-
-
 		b6.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
