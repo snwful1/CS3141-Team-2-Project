@@ -17,24 +17,26 @@ public class Expense{
         this.frequencyInDays = frequencyInDays;
     }
 
+    // Getter Methods
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public double getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
     public int getFrequencyInDays() {
         return frequencyInDays;
+    }
+
+    // Setter Methods
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public void setAmount(double amount) {
+        this.amount = amount;
     }
 
     public void setFrequencyInDays(int frequencyInDays) {
