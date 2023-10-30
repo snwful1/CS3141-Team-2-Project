@@ -1,5 +1,5 @@
 /*
- * Author(s): Samuel Wright,
+ * Author(s): Samuel Wright, Calder Neely
  * Created: 10-16-2023
  * Last Updated: 10-22-2023
  */
