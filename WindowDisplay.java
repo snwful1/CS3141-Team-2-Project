@@ -173,7 +173,7 @@ public class WindowDisplay extends Application{
 		primaryStage.show();
 	}
 
-	//Method that load the account details tab
+	//Method that loads the account details tab
 	private void loadAccountDetails(User currentUser) {
 		Stage accountStage = new Stage();
 		accountStage.setTitle("Financial Assistant");
@@ -463,7 +463,11 @@ public class WindowDisplay extends Application{
 		Users users = new Users();
 
 		//Read in user data from text document to load login information, etc
-		users.loadData();
+		try {
+			users.loadData();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 
 		return users;
 	}

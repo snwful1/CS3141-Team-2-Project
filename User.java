@@ -114,6 +114,8 @@ public class User {
         File usersFile = new File(name + ".txt");
         Scanner input = null;
 
+
+
         //Create file if it does not exist and open with scanner
         try {
             usersFile.createNewFile();
