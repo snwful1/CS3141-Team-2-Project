@@ -346,6 +346,71 @@ public class WindowDisplay extends Application{
 		h6.setAlignment(Pos.CENTER_RIGHT);
 		h6.getChildren().add(b6);
 		grid3.add(h6, 0, 13);
+		
+		// See future balance
+		Label futureBalance = new Label("Enter Number of Days");
+		grid3.add(futureBalance,0,15);
+		TextField futureBalanceT = new TextField();	
+		grid3.add(futureBalanceT,1,15);
+
+		Button futureBalanceButton = new Button("See Future Balance");
+		HBox futureHBox = new HBox(10);
+		futureHBox.setAlignment(Pos.CENTER_RIGHT);
+		futureHBox.getChildren().add(futureBalanceButton);
+		grid3.add(futureHBox, 2, 15);
+
+		//Reset Button
+		Button resetBalanceButton = new Button("Reset");
+		futureHBox.getChildren().add(resetBalanceButton);
+		resetBalanceButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				balanceLabel.setText("Balance: " + balanceVal);	// Reset balance to actual balance
+				futureBalanceT.setText("");				// Reset number of days text box
+			}	
+		});
+
+		futureBalanceButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				// Need to implement future balance logic
+				double futureTotal = balanceVal;									// Initialize to current balance
+				// Inputted number of future days
+				int days = Integer.parseInt(futureBalanceT.getText());				
+				Double amount;
+				int freq = 0;
+
+				// Loop to go through the income list
+				for(int i=0; i<currentUser.getIncomeList().size(); i++){
+					amount = currentUser.getIncomeList().get(i).getAmount(); 		// Amount to be added to balance from income i
+					freq = currentUser.getIncomeList().get(i).getFrequencyInDays(); // Frquency of income i
+					int times = days / freq;										// How many times the amount will be added
+
+					if(freq <= days){												// If income will happen in inputted amount of time
+						futureTotal += (times * amount);					
+					}
+				}
+				// Loop to go through the expense list
+				for(int i=0; i<currentUser.getExpenseList().size(); i++){
+					amount = currentUser.getExpenseList().get(i).getAmount(); 		// Amount to be added to balance from income i
+					freq = currentUser.getExpenseList().get(i).getFrequencyInDays();// Frquency of income i
+					int times = days / freq;										// How many times the amount will be added
+
+					if(freq <= days){												// If expense will happen in inputted amount of time
+						futureTotal -= (amount * times);	
+					}
+				}
+				
+				String futureTotalStr = String.format("%.2f", futureTotal );	// Future total in string format
+
+				// Show balance as the future Balance
+				if(Integer.parseInt(futureBalanceT.getText())>= 0){		
+					balanceLabel.setText("Balance: " + futureTotalStr);
+				}
+			}
+		});
+
+
 
 		b6.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
