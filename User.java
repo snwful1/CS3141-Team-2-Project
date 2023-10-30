@@ -1,5 +1,5 @@
 /*
- * Author(s): Samuel Wright, Evan Bradford
+ * Author(s): Samuel Wright, Calder Neely, Evan Bradford, Noah Waldorf
  * Last Updated: 10-22-2023
  */
 
