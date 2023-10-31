@@ -355,16 +355,16 @@ public class WindowDisplay extends Application {
 		grid3.add(h6, 0, 13);
 		
 		// See future balance
-		Label futureBalance = new Label("Enter Number of Days");
-		grid3.add(futureBalance,0,15);
+		Label futureBalance = new Label("Enter Number of Days:");
+		grid3.add(futureBalance,0,16);
 		TextField futureBalanceT = new TextField();	
-		grid3.add(futureBalanceT,1,15);
+		grid3.add(futureBalanceT,1,16);
 
 		Button futureBalanceButton = new Button("See Future Balance");
 		HBox futureHBox = new HBox(10);
 		futureHBox.setAlignment(Pos.CENTER_RIGHT);
 		futureHBox.getChildren().add(futureBalanceButton);
-		grid3.add(futureHBox, 2, 15);
+		grid3.add(futureHBox, 2, 16);
 
 		//Reset Button
 		Button resetBalanceButton = new Button("Reset");
@@ -376,11 +376,9 @@ public class WindowDisplay extends Application {
 				futureBalanceT.setText("");				// Reset number of days text box
 			}	
 		});
-
 		futureBalanceButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				// Need to implement future balance logic
 				double futureTotal = balanceVal;									// Initialize to current balance
 				// Inputted number of future days
 				int days = Integer.parseInt(futureBalanceT.getText());				
@@ -393,7 +391,7 @@ public class WindowDisplay extends Application {
 					freq = currentUser.getIncomeList().get(i).getFrequencyInDays(); // Frquency of income i
 					int times = days / freq;										// How many times the amount will be added
 
-					if(freq <= days){												// If income will happen in inputted amount of time
+					if(freq <= days){				
 						futureTotal += (times * amount);					
 					}
 				}
@@ -403,16 +401,13 @@ public class WindowDisplay extends Application {
 					freq = currentUser.getExpenseList().get(i).getFrequencyInDays();// Frquency of income i
 					int times = days / freq;										// How many times the amount will be added
 
-					if(freq <= days){												// If expense will happen in inputted amount of time
+					if(freq <= days){												
 						futureTotal -= (amount * times);	
 					}
 				}
-				
 				String futureTotalStr = String.format("%.2f", futureTotal );	// Future total in string format
-
-				// Show balance as the future Balance
 				if(Integer.parseInt(futureBalanceT.getText())>= 0){		
-					balanceLabel.setText("Balance: " + futureTotalStr);
+					balanceLabel.setText("Balance: " + futureTotalStr); 			// Show balance as the future Balance
 				}
 			}
 		});
