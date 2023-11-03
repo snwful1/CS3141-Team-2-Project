@@ -35,6 +35,10 @@ public class WindowDisplay extends Application {
 	private	Users userList = null;
 	private User currentUser = null;
 
+	// Font Sizes
+	int bigText = 60;
+	int smallText = 20;
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
@@ -58,32 +62,34 @@ public class WindowDisplay extends Application {
 		grid.setAlignment(Pos.TOP_CENTER);
 		grid.setHgap(5);
 		grid.setVgap(10);
-		grid.setPadding(new Insets(25, 25, 25, 25));
+		grid.setPadding(new Insets(50, 25, 25, 25));
 
 		// User Creator Labels and Textfields
-		Text userCreation = new Text("Create User");
-		userCreation.setFont(Font.font("TimesRoman", FontWeight.BOLD, 30));
-		grid.add(userCreation, 0, 0, 2, 1);
+		Text userCreation = new Text("  Create User");
+		userCreation.setFont(Font.font("Cambria", FontWeight.BOLD, bigText));
+		grid.add(userCreation, 0, 1, 2, 1);
 
 		Label userName = new Label("New Username:");
-		grid.add(userName, 0, 1);
+		grid.add(userName, 0, 2);
 		TextField userTextField = new TextField();
-		grid.add(userTextField, 1, 1);
+		grid.add(userTextField, 1, 2);
 
 		Label pw = new Label("New Password:");
-		grid.add(pw, 0, 2);
+		grid.add(pw, 0, 3);
 		PasswordField pwBox = new PasswordField();
-		grid.add(pwBox, 1, 2);
+		pwBox.setFont(Font.font("Cambria", FontWeight.NORMAL, smallText));
+		grid.add(pwBox, 1, 3);
 
 		// User Creator Button
 		Button b1 = new Button("Create New User");
 		HBox h1 = new HBox(10);
 		h1.setAlignment(Pos.CENTER_RIGHT);
 		h1.getChildren().add(b1);
-		grid.add(h1, 1, 3);
+		grid.add(h1, 1, 4);
 
 		Text createError = new Text();
-		grid.add(createError, 1,4);
+		createError.setFont(Font.font("Cambria", FontWeight.NORMAL, smallText));
+		grid.add(createError, 1,5);
 		createError.setFill(Color.DARKRED);
 
 		// Button Code
@@ -93,7 +99,7 @@ public class WindowDisplay extends Application {
 				int createUserResult = createNewUser(userList, userTextField.getText(), pwBox.getText());
 				if (createUserResult == 0) {
 					createError.setText("New user " + userTextField.getText() + " created!");
-					createError.setFill(Color.DARKGREEN);
+					createError.setFill(Color.DARKBLUE);
 					userTextField.clear();
 					pwBox.clear();
 				}
@@ -111,29 +117,30 @@ public class WindowDisplay extends Application {
 		});
 
 		// Login Labels and Textfields
-		Text loginText = new Text("Login");
-		loginText.setFont(Font.font("TimesRoman", FontWeight.BOLD, 30));
-		grid.add(loginText, 0, 5, 2, 1);
+		Text loginText = new Text("        Login");
+		grid.add(loginText, 0, 6, 2, 1);
 
-		Label userName2 = new Label("Username:");
-		grid.add(userName2, 0, 6);
+		Label userName2 = new Label("        Username:");
+		grid.add(userName2, 0, 7);
 		TextField userTextField2 = new TextField();
-		grid.add(userTextField2, 1, 6);
+		grid.add(userTextField2, 1, 7);
 
-		Label pw2 = new Label("Password:");
-		grid.add(pw2, 0, 7);
+		Label pw2 = new Label("         Password:");
+		grid.add(pw2, 0, 8);
 		PasswordField pwBox2 = new PasswordField();
-		grid.add(pwBox2, 1, 7);
+		pwBox2.setFont(Font.font("Cambria", FontWeight.NORMAL, smallText));
+		grid.add(pwBox2, 1, 8);
 
 		// Login Button
 		Button b2 = new Button("Login");
 		HBox h2 = new HBox(10);
 		h2.setAlignment(Pos.CENTER_RIGHT);
 		h2.getChildren().add(b2);
-		grid.add(h2, 1, 8);
+		grid.add(h2, 1, 9);
 
 		Text loginError = new Text();
-		grid.add(loginError, 1,9);
+		loginError.setFont(Font.font("Cambria", FontWeight.NORMAL, smallText));
+		grid.add(loginError, 1,10);
 
 		// Button Code
 		b2.setOnAction(new EventHandler<ActionEvent>() {
@@ -165,13 +172,14 @@ public class WindowDisplay extends Application {
 
 
 		// Commented out while working on ui
-		//Group root = new Group(grid);
+		// Group root = new Group(grid);
 
 		Scene scene = new Scene(grid, 250, 500);
 		// Add your content to the scene
 
 		//Set the scene on the stage and show the stage
 		primaryStage.setScene(scene);
+		scene.getStylesheets().add(WindowDisplay.class.getResource("styleSheets/style.css").toExternalForm());
 		primaryStage.show();
 	}
 
