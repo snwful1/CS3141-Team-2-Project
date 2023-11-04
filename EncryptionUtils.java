@@ -19,7 +19,7 @@ public class EncryptionUtils {
         doCryto(Cipher.ENCRYPT_MODE, key, input);
     }
 
-    public static void decyrpt(String key, File input) {
+    public static void decrypt(String key, File input) {
         doCryto(Cipher.DECRYPT_MODE, key, input);
     }
 
