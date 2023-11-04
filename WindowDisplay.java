@@ -286,6 +286,20 @@ public class WindowDisplay extends Application {
 			}
 		});
 
+		// add custom expense button
+		Button addExpenseButton = new Button("Add Expense");
+		HBox addExpenseHBox = new HBox(10);
+		addExpenseHBox.setAlignment(Pos.CENTER_RIGHT);
+		addExpenseHBox.getChildren().add(addExpenseButton);
+		grid3.add(addExpenseHBox, 1, 9);
+
+		// add custom income button
+		Button addIncomeButton = new Button("Add Income");
+		HBox addIncomeHBox = new HBox(10);
+		addIncomeHBox.setAlignment(Pos.CENTER_RIGHT);
+		addIncomeHBox.getChildren().add(addIncomeButton);
+		grid3.add(addIncomeHBox, 0, 9);
+		
 		// income
 		Income i = currentUser.getIncomeList().get(0);
 		Text incomeText = new Text("Income");
