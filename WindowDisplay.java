@@ -83,7 +83,7 @@ public class WindowDisplay extends Application {
 		// User Creator Button
 		Button b1 = new Button("Create New User");
 		HBox h1 = new HBox(10);
-		h1.setAlignment(Pos.CENTER_RIGHT);
+		h1.setAlignment(Pos.CENTER);
 		h1.getChildren().add(b1);
 		grid.add(h1, 1, 4);
 
@@ -118,6 +118,7 @@ public class WindowDisplay extends Application {
 
 		// Login Labels and Textfields
 		Text loginText = new Text("        Login");
+		loginText.setFont(Font.font("Cambria", FontWeight.BOLD, bigText));
 		grid.add(loginText, 0, 6, 2, 1);
 
 		Label userName2 = new Label("        Username:");
@@ -234,7 +235,7 @@ public class WindowDisplay extends Application {
 
 		Text balanceText = new Text("Finances");
 		balanceText.setFont(Font.font("TimesRoman", FontWeight.BOLD, 30));
-		grid3.add(balanceText,0,0,2,1);
+		grid3.add(balanceText,0,1,2,1);
 
 		Scanner dataScan = null;
 		try {
@@ -248,17 +249,18 @@ public class WindowDisplay extends Application {
 		double balanceVal = dataScan.nextDouble();
 		dataScan.close();
 		Label balanceLabel = new Label("Balance: " + balanceVal);
-		grid3.add(balanceLabel, 0, 1);
+		balanceLabel.setFont(Font.font("TimesRoman", FontWeight.BOLD, 30));
+		grid3.add(balanceLabel, 1, 1,2,1);
 
-		Label setBalance = new Label("Set Balance");
+		Label setBalance = new Label("Set Balance:");
 		grid3.add(setBalance,0,2);
 		TextField setBalanceT = new TextField();
 		grid3.add(setBalanceT,1,2);
 
 		Button b4 = new Button("Set Balance");
 		HBox h4 = new HBox(10);
-		h4.setAlignment(Pos.CENTER_RIGHT);
 		h4.getChildren().add(b4);
+		//h4.setAlignment(Pos.CENTER_LEFT);
 		grid3.add(h4, 2, 2);
 
 		b4.setOnAction(new EventHandler<ActionEvent>() {
@@ -288,22 +290,22 @@ public class WindowDisplay extends Application {
 		Income i = currentUser.getIncomeList().get(0);
 		Text incomeText = new Text("Income");
 		incomeText.setFont(Font.font("TimesRoman", FontWeight.BOLD, 30));
-		grid3.add(incomeText,0,3,2,1);
+		grid3.add(incomeText,0,4,2,1);
 
 		Label incomeNLabel = new Label("Income Name: " + i.getName());
-		grid3.add(incomeNLabel, 0, 4);
+		grid3.add(incomeNLabel, 0, 5);
 
 		Label incomeALabel = new Label("Income Amount: $" + i.getAmount());
-		grid3.add(incomeALabel, 0, 5);
+		grid3.add(incomeALabel, 0, 6);
 
 		Label incomeFLabel = new Label("Income Frequency: " + i.getFrequencyInDays() + " days");
-		grid3.add(incomeFLabel, 0, 6);
+		grid3.add(incomeFLabel, 0, 7);
 
 		Button b5 = new Button("Apply Manually");
 		HBox h5 = new HBox(10);
 		h5.setAlignment(Pos.CENTER_RIGHT);
 		h5.getChildren().add(b5);
-		grid3.add(h5, 0, 7);
+		grid3.add(h5, 0, 8);
 
 		b5.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -345,34 +347,34 @@ public class WindowDisplay extends Application {
 		Expense e = currentUser.getExpenseList().get(0);
 		Text expenseText = new Text("Expense");
 		expenseText.setFont(Font.font("TimesRoman", FontWeight.BOLD, 30));
-		grid3.add(expenseText,0,9,2,1);
+		grid3.add(expenseText,1,4,2,1);
 
 		Label expenseNLabel = new Label("Expense Name: " + e.getName());
-		grid3.add(expenseNLabel, 0, 10);
+		grid3.add(expenseNLabel, 1, 5);
 
 		Label expenseALabel = new Label("Expense Amount: $" + e.getAmount());
-		grid3.add(expenseALabel, 0, 11);
+		grid3.add(expenseALabel, 1, 6);
 
 		Label expenseFLabel = new Label("Expense Frequency: " + e.getFrequencyInDays() + " days");
-		grid3.add(expenseFLabel, 0, 12);
+		grid3.add(expenseFLabel, 1, 7);
 
 		Button b6 = new Button("Apply Manually");
 		HBox h6 = new HBox(10);
 		h6.setAlignment(Pos.CENTER_RIGHT);
 		h6.getChildren().add(b6);
-		grid3.add(h6, 0, 13);
+		grid3.add(h6, 1, 8);
 		
 		// See future balance
 		Label futureBalance = new Label("Enter Number of Days:");
-		grid3.add(futureBalance,0,16);
+		grid3.add(futureBalance,0,60);
 		TextField futureBalanceT = new TextField();	
-		grid3.add(futureBalanceT,1,16);
+		grid3.add(futureBalanceT,1,60);
 
 		Button futureBalanceButton = new Button("See Future Balance");
 		HBox futureHBox = new HBox(10);
 		futureHBox.setAlignment(Pos.CENTER_RIGHT);
 		futureHBox.getChildren().add(futureBalanceButton);
-		grid3.add(futureHBox, 2, 16);
+		grid3.add(futureHBox, 2, 60);
 
 		//Reset Button
 		Button resetBalanceButton = new Button("Reset");
@@ -460,6 +462,7 @@ public class WindowDisplay extends Application {
 		// scene setup
 		Scene account = new Scene(grid3, 250, 500);
 		accountStage.setScene(account);
+		account.getStylesheets().add(WindowDisplay.class.getResource("styleSheets/style.css").toExternalForm());
 		accountStage.show();
 
 	}
