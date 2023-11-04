@@ -30,7 +30,7 @@ public class Users {
         }
 
         if(usersFile.exists()) {
-            EncryptionUtils.decyrpt(KEY, usersFile);
+            EncryptionUtils.decrypt(KEY, usersFile);
 
             Scanner input = null;
             try {
@@ -59,7 +59,7 @@ public class Users {
      * This method writes the contents of the USERS hashmap to an encrypted txt file
      */
     public void save() {
-        EncryptionUtils.decyrpt(KEY, usersFile);
+        EncryptionUtils.decrypt(KEY, usersFile);
         try {
             FileWriter myWriter = new FileWriter(usersFile);
             USERS.forEach( (name, password) -> {
