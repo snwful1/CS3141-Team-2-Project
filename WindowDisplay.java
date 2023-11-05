@@ -83,7 +83,7 @@ public class WindowDisplay extends Application {
 		// User Creator Button
 		Button b1 = new Button("Create New User");
 		HBox h1 = new HBox(10);
-		h1.setAlignment(Pos.CENTER);
+		h1.setAlignment(Pos.CENTER_RIGHT);
 		h1.getChildren().add(b1);
 		grid.add(h1, 1, 4);
 
@@ -249,7 +249,6 @@ public class WindowDisplay extends Application {
 		double balanceVal = dataScan.nextDouble();
 		dataScan.close();
 		Label balanceLabel = new Label("Balance: " + balanceVal);
-		balanceLabel.setFont(Font.font("TimesRoman", FontWeight.BOLD, 30));
 		grid3.add(balanceLabel, 1, 1,2,1);
 
 		Label setBalance = new Label("Set Balance:");
@@ -385,25 +384,25 @@ public class WindowDisplay extends Application {
 		expenseDialog.setDialogPane(expenseDialogPane);
 		expenseDialog.setTitle("Add Expense");
 		
-		ButtonType addExpenseButton = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
-		expenseDialog.getDialogPane().getButtonTypes().addAll(addExpenseButton, ButtonType.CANCEL);
+		//ButtonType addExpenseButton = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
+		//expenseDialog.getDialogPane().getButtonTypes().addAll(addExpenseButton, ButtonType.CANCEL);
 		
-		addExpenseButton.setOnAction(event -> {
-		    expenseDialog.setResultConverter(dialogButton -> {
-		        if (dialogButton == addExpenseButton) {
-		            String name = expenseNameField.getText();
-		            double amount = Double.parseDouble(expenseAmountField.getText());
-		            int frequencyInDays = Integer.parseInt(expenseFrequencyField.getText());
+		//addExpenseButton.setOnAction(event -> {
+		   // expenseDialog.setResultConverter(dialogButton -> {
+		       // if (dialogButton == addExpenseButton) {
+		         //   String name = expenseNameField.getText();
+		         //   double amount = Double.parseDouble(expenseAmountField.getText());
+		          //  int frequencyInDays = Integer.parseInt(expenseFrequencyField.getText());
 		            // Create a new Expense object with the entered details
-		            Expense newExpense = new Expense(name, amount, frequencyInDays);
+		         //   Expense newExpense = new Expense(name, amount, frequencyInDays);
 		            // You can add this newExpense to your user's expense list here
-		            currentUser.addNewExpense(newExpense);
-		            expenseDialog.close();
-		        }
-		        return null;
-		    });
-		    expenseDialog.showAndWait();
-		});
+		        //    currentUser.addNewExpense(newExpense);
+		        //    expenseDialog.close();
+		      //  }
+		       // return null;
+		  //  });
+		   // expenseDialog.showAndWait();
+		//});
 		
 		clearExpensesButton.setOnAction(event -> {
 		    // Clear all expenses in the current user's expense list
