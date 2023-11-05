@@ -286,19 +286,135 @@ public class WindowDisplay extends Application {
 			}
 		});
 
-		// add custom expense button
-		Button addExpenseButton = new Button("Add Expense");
-		HBox addExpenseHBox = new HBox(10);
-		addExpenseHBox.setAlignment(Pos.CENTER_RIGHT);
-		addExpenseHBox.getChildren().add(addExpenseButton);
-		grid3.add(addExpenseHBox, 1, 9);
-
-		// add custom income button
+		// START SAM'S WORK ON CUSTOM INCOME AND EXPENSE BUTTONS
+		
+		// ADD INCOME BUTTON DEFINITION
 		Button addIncomeButton = new Button("Add Income");
 		HBox addIncomeHBox = new HBox(10);
 		addIncomeHBox.setAlignment(Pos.CENTER_RIGHT);
 		addIncomeHBox.getChildren().add(addIncomeButton);
 		grid3.add(addIncomeHBox, 0, 9);
+
+		// INCOME INPUT FIELDS
+		TextField incomeNameField = new TextField();
+		TextField incomeAmountField = new TextField();
+		TextField incomeFrequencyField = new TextField();
+
+		// DIALOG FOR ADDING CUSTOM INCOME
+		DialogPane dialogPane = new DialogPane();
+		dialogPane.setHeaderText("Enter Income Details");
+		dialogPane.setContent(new VBox(10,
+			new Label("Income Name:"), incomeNameField,
+			new Label("Income Amount:"), incomeAmountField,
+			new Label("Income Frequency (in days):"), incomeFrequencyField
+		));
+
+		Dialog<ButtonType> dialog = new Dialog<>();
+		dialog.setDialogPane(dialogPane);
+		dialog.setTitle("Add Income");
+
+		// OK BUTTON DEFINITION
+		ButtonType addButton = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
+		dialog.getDialogPane().getButtonTypes().addAll(addButton, ButtonType.CANCEL);
+
+		addIncomeButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				// Show the dialog and wait for user input
+				dialog.setResultConverter(dialogButton -> {
+					if (dialogButton == addButton) {
+						String name = incomeNameField.getText();
+						double amount = Double.parseDouble(incomeAmountField.getText());
+						int frequencyInDays = Integer.parseInt(incomeFrequencyField.getText());
+						// Create a new Income object with the entered details
+						Income newIncome = new Income(name, amount, frequencyInDays);
+						// You can add this newIncome to your user's income list here
+						currentUser.addNewIncome(newIncome);
+						dialog.close();
+					}
+					return null;
+				});
+				dialog.showAndWait();
+			}
+		});
+
+		// Create a button to clear all incomes
+		Button clearIncomesButton = new Button("Clear Incomes");
+		HBox clearIncomesHBox = new HBox(10);
+		clearIncomesHBox.setAlignment(Pos.CENTER_RIGHT);
+		clearIncomesHBox.getChildren().add(clearIncomesButton);
+		grid3.add(clearIncomesHBox, 0, 10);
+
+		clearIncomesButton.setOnAction(event -> {
+			// Clear all incomes in the current user's income list
+			currentUser.getIncomeList().clear();
+
+			// ADD SOMETHING HERE TO UPDATE USER FILE
+
+			// ADD SOMETHING HERE IF WANT TO DISPLAY MESSAGE
+		});
+
+		// add custom expense button
+		Button addExpenseButton = new Button("Add Expense");
+		HBox addExpenseHBox = new HBox(10);
+		addExpenseHBox.setAlignment(Pos.CENTER_RIGHT);
+		addExpenseHBox.getChildren().add(addExpenseButton);
+		// add button to grid 3
+		grid3.add(addExpenseHBox, 1, 9);
+
+		// EXPENSE INPUT FIELDS
+		TextField expenseNameField = new TextField();
+		TextField expenseAmountField = new TextField();
+		TextField expenseFrequencyField = new TextField();
+
+		Button clearExpensesButton = new Button("Clear Expenses");
+		HBox clearExpensesHBox = new HBox(10);
+		clearExpensesHBox.setAlignment(Pos.CENTER_RIGHT);
+		clearExpensesHBox.getChildren().add(clearExpensesButton);
+		grid3.add(clearExpensesHBox, 1, 10);
+
+		DialogPane expenseDialogPane = new DialogPane();
+		expenseDialogPane.setHeaderText("Enter Expense Details");
+		expenseDialogPane.setContent(new VBox(10,
+		        new Label("Expense Name:"), expenseNameField,
+		        new Label("Expense Amount:"), expenseAmountField,
+		        new Label("Expense Frequency (in days):"), expenseFrequencyField
+		));
+		
+		Dialog<ButtonType> expenseDialog = new Dialog<>();
+		expenseDialog.setDialogPane(expenseDialogPane);
+		expenseDialog.setTitle("Add Expense");
+		
+		ButtonType addExpenseButton = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
+		expenseDialog.getDialogPane().getButtonTypes().addAll(addExpenseButton, ButtonType.CANCEL);
+		
+		addExpenseButton.setOnAction(event -> {
+		    expenseDialog.setResultConverter(dialogButton -> {
+		        if (dialogButton == addExpenseButton) {
+		            String name = expenseNameField.getText();
+		            double amount = Double.parseDouble(expenseAmountField.getText());
+		            int frequencyInDays = Integer.parseInt(expenseFrequencyField.getText());
+		            // Create a new Expense object with the entered details
+		            Expense newExpense = new Expense(name, amount, frequencyInDays);
+		            // You can add this newExpense to your user's expense list here
+		            currentUser.addNewExpense(newExpense);
+		            expenseDialog.close();
+		        }
+		        return null;
+		    });
+		    expenseDialog.showAndWait();
+		});
+		
+		clearExpensesButton.setOnAction(event -> {
+		    // Clear all expenses in the current user's expense list
+		    currentUser.getExpenseList().clear();
+
+ 		    // ADD SOMETHING HERE TO UPDATE USER FILE
+
+		    // ADD SOMETHING HERE IF YOU WANT TO DISPLAY A MESSAGE
+		});
+
+		// END SAM'S WORK ON CUSTOM INCOME AND EXPENSE BUTTONS
 		
 		// income
 		Income i = currentUser.getIncomeList().get(0);
