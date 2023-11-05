@@ -1,5 +1,5 @@
 /*
- * Author(s): Danyel Munson, Evan Bradford, Calder Neely, Noah Waldorf
+ * Author(s): Danyel Munson, Evan Bradford, Calder Neely, Noah Waldorf, Samuel Wright
  * Created: 10-11-2023
  * Last Updated: 10-23-2023
  */
