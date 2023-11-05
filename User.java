@@ -1,6 +1,7 @@
 /*
- * Author(s): Samuel Wright, Calder Neely, Evan Bradford, Noah Waldorf
+ * Author(s): Samuel Wright, Calder Neely, Evan Bradford, Noah Waldorf, Pan Prathongkham
  * Created: 10-12-2023
+ * Last edited: 11-05-2023
  */
 
 import java.io.File;
@@ -11,6 +12,7 @@ import java.util.Scanner;
 
 public class User {
     private String name;
+    private String password;
     private ArrayList<Expense> expenseList;
     private ArrayList<Income> incomeList;
     private String phoneNumber;
@@ -18,6 +20,7 @@ public class User {
 
     public User(String name) { //, String password
         this.name = name;
+        this.password = password;
         incomeList = new ArrayList<Income>();
         expenseList = new ArrayList<Expense>();
         initUser();
@@ -35,8 +38,40 @@ public class User {
         return incomeList;
     }
 
-    public void changeName(String newName) {
-        this.name = newName;
+    //getter and setter for email
+    public String getEmail() { return email; }
+
+    public void setEmail(String email) { this.email = email; }
+
+    public void changeName(String newName) { this.name = newName;}
+
+    public void changeUsername(String newUsername) {
+        this.name = newUsername;
+        saveUserData();
+    }
+
+    public void changePassword(String newPassword) {
+        this.password = newPassword;
+        saveUserData();
+    }
+
+    private void saveUserData() {
+        File userFile = new File("output/userdata/" + name + ".txt");
+
+        try {
+            FileWriter myWriter = new FileWriter(userFile, false);
+            myWriter.write(this.password + "\n"); // Save the new password
+            for (Income i : incomeList) {
+                myWriter.write("Income: " + i.getName() + " " + i.getAmount() + " " + i.getFrequencyInDays() + "\n");
+            }
+            for (Expense e : expenseList) {
+                myWriter.write("Expense: " + e.getName() + " " + e.getAmount() + " " + e.getFrequencyInDays() + "\n");
+            }
+            myWriter.close();
+        } catch (IOException e) {
+            System.out.println("Failed to write user data");
+            e.printStackTrace();
+        }
     }
 
     public void initUser() {
