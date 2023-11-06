@@ -17,6 +17,7 @@ public class User {
     private ArrayList<Income> incomeList;
     private String phoneNumber;
     private String email;
+    private double balance;
 
     public User(String name) { //, String password
         this.name = name;
@@ -36,6 +37,14 @@ public class User {
 
     public ArrayList<Income> getIncomeList() {
         return incomeList;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
     }
 
     //getter and setter for email
@@ -155,7 +164,6 @@ public class User {
         String name = null;
         double amount = 0;
         int frequency = 0;
-        double balance = 0;
 
         if (input.hasNext()) {
             balance = input.nextDouble();

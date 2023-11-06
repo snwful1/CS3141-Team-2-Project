@@ -5,11 +5,17 @@
  */
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.paint.Color;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
@@ -22,6 +28,7 @@ import javafx.scene.control.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.Scanner;
 
 
@@ -499,15 +506,15 @@ public class WindowDisplay extends Application {
 		
 		// See future balance
 		Label futureBalance = new Label("Enter Number of Days:");
-		grid3.add(futureBalance,0,60);
+		grid3.add(futureBalance,0,40);
 		TextField futureBalanceT = new TextField();	
-		grid3.add(futureBalanceT,1,60);
+		grid3.add(futureBalanceT,1,40);
 
 		Button futureBalanceButton = new Button("See Future Balance");
 		HBox futureHBox = new HBox(10);
 		futureHBox.setAlignment(Pos.CENTER_RIGHT);
 		futureHBox.getChildren().add(futureBalanceButton);
-		grid3.add(futureHBox, 2, 60);
+		grid3.add(futureHBox, 2, 40);
 
 		//Reset Button
 		Button resetBalanceButton = new Button("Reset");
@@ -522,11 +529,15 @@ public class WindowDisplay extends Application {
 		futureBalanceButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				double futureTotal = balanceVal;									// Initialize to current balance
+				double currentBalance = currentUser.getBalance();
+				double futureTotal = currentBalance;								// Initialize to current balance
 				// Inputted number of future days
 				int days = Integer.parseInt(futureBalanceT.getText());				
 				Double amount;
 				int freq = 0;
+
+				ObservableList<PieChart.Data> expensePieChartData = FXCollections.observableArrayList();
+				ObservableList<PieChart.Data> incomePieChartData = FXCollections.observableArrayList();
 
 				// Loop to go through the income list
 				for(int i=0; i<currentUser.getIncomeList().size(); i++){
@@ -534,9 +545,12 @@ public class WindowDisplay extends Application {
 					freq = currentUser.getIncomeList().get(i).getFrequencyInDays(); // Frquency of income i
 					int times = days / freq;										// How many times the amount will be added
 
-					if(freq <= days){				
-						futureTotal += (times * amount);					
+					if(freq <= days){
+						futureTotal += (times * amount);
 					}
+
+					double dailyAmount = amount/freq;
+					incomePieChartData.add(new PieChart.Data(currentUser.getIncomeList().get(i).getName(), dailyAmount));
 				}
 				// Loop to go through the expense list
 				for(int i=0; i<currentUser.getExpenseList().size(); i++){
@@ -544,14 +558,60 @@ public class WindowDisplay extends Application {
 					freq = currentUser.getExpenseList().get(i).getFrequencyInDays();// Frquency of income i
 					int times = days / freq;										// How many times the amount will be added
 
-					if(freq <= days){												
-						futureTotal -= (amount * times);	
+					if(freq <= days){
+						futureTotal -= (amount * times);
 					}
+					double dailyAmount = amount/freq;
+					expensePieChartData.add(new PieChart.Data(currentUser.getExpenseList().get(i).getName(), dailyAmount));
 				}
 				String futureTotalStr = String.format("%.2f", futureTotal );	// Future total in string format
-				if(Integer.parseInt(futureBalanceT.getText())>= 0){		
+				if(Integer.parseInt(futureBalanceT.getText())>= 0){
 					balanceLabel.setText("Balance: " + futureTotalStr); 			// Show balance as the future Balance
 				}
+
+				//Show graphs
+				NumberAxis yAxis = new NumberAxis(0, futureTotal * 1.1, futureTotal / 25);
+				NumberAxis xAxis = new NumberAxis(0, days, days/15);
+
+				LineChart lineChart = new LineChart(xAxis, yAxis);
+
+				XYChart.Series series = new XYChart.Series();
+				series.setName("Projected future balance");
+
+				series.getData().add(new XYChart.Data(0, currentBalance));
+				series.getData().add(new XYChart.Data(days-1, futureTotal));
+
+				double projectedBalance = currentBalance;
+				boolean didBalanceUpdate;
+				for (int i = 0; i < days; i++) {
+					didBalanceUpdate = false;
+					for (Expense e: currentUser.getExpenseList()) {
+						if ((i % e.getFrequencyInDays()) == 0) {
+							projectedBalance -= e.getAmount();
+							didBalanceUpdate = true;
+						}
+					}
+					for (Income x: currentUser.getIncomeList()) {
+						if ((i % x.getFrequencyInDays()) == 0)  {
+							projectedBalance += x.getAmount();
+							didBalanceUpdate = true;
+						}
+					}
+
+					if (didBalanceUpdate) {
+						series.getData().add(new XYChart.Data(i, projectedBalance));
+					}
+				}
+
+				lineChart.getData().add(series);
+				grid3.add(lineChart, 0, 20, 2, 20);
+
+				PieChart expensePieChart = new PieChart(expensePieChartData);
+				expensePieChart.setTitle("Expenses breakdown");
+				PieChart incomePieChart = new PieChart(incomePieChartData);
+				incomePieChart.setTitle("Income breakdown");
+				grid3.add(expensePieChart, 2, 20, 7, 7);
+				grid3.add(incomePieChart, 2, 30, 10, 10);
 			}
 		});
 
