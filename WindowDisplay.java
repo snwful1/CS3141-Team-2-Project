@@ -570,7 +570,12 @@ public class WindowDisplay extends Application {
 				}
 
 				//Show graphs
-				NumberAxis yAxis = new NumberAxis(0, futureTotal * 1.1, futureTotal / 25);
+				NumberAxis yAxis;
+				if (currentBalance <= futureTotal) {
+					yAxis = new NumberAxis(0, futureTotal * 1.1, futureTotal / 25);
+				} else {
+					yAxis = new NumberAxis(futureTotal, currentBalance, futureTotal / 25);
+				}
 				NumberAxis xAxis = new NumberAxis(0, days, days/15);
 
 				LineChart lineChart = new LineChart(xAxis, yAxis);
