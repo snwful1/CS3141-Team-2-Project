@@ -350,7 +350,7 @@ public class WindowDisplay extends Application {
 
 			// ADD SOMETHING HERE TO UPDATE USER FILE
 
-			// ADD SOMETHING HERE IF WANT TO DISPLAY MESSAGE
+			// ADD SOMETHING HERE IF YOU WANT TO DISPLAY MESSAGE
 		});
 
 		// add custom expense button
@@ -366,12 +366,6 @@ public class WindowDisplay extends Application {
 		TextField expenseAmountField = new TextField();
 		TextField expenseFrequencyField = new TextField();
 
-		Button clearExpensesButton = new Button("Clear Expenses");
-		HBox clearExpensesHBox = new HBox(10);
-		clearExpensesHBox.setAlignment(Pos.CENTER_RIGHT);
-		clearExpensesHBox.getChildren().add(clearExpensesButton);
-		grid3.add(clearExpensesHBox, 1, 10);
-
 		DialogPane expenseDialogPane = new DialogPane();
 		expenseDialogPane.setHeaderText("Enter Expense Details");
 		expenseDialogPane.setContent(new VBox(10,
@@ -384,26 +378,36 @@ public class WindowDisplay extends Application {
 		expenseDialog.setDialogPane(expenseDialogPane);
 		expenseDialog.setTitle("Add Expense");
 		
-		//ButtonType addExpenseButton = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
-		//expenseDialog.getDialogPane().getButtonTypes().addAll(addExpenseButton, ButtonType.CANCEL);
+		ButtonType addExpenseOKButton = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
+		expenseDialog.getDialogPane().getButtonTypes().addAll(addExpenseOKButton, ButtonType.CANCEL);
 		
-		//addExpenseButton.setOnAction(event -> {
-		   // expenseDialog.setResultConverter(dialogButton -> {
-		       // if (dialogButton == addExpenseButton) {
-		         //   String name = expenseNameField.getText();
-		         //   double amount = Double.parseDouble(expenseAmountField.getText());
-		          //  int frequencyInDays = Integer.parseInt(expenseFrequencyField.getText());
-		            // Create a new Expense object with the entered details
-		         //   Expense newExpense = new Expense(name, amount, frequencyInDays);
-		            // You can add this newExpense to your user's expense list here
-		        //    currentUser.addNewExpense(newExpense);
-		        //    expenseDialog.close();
-		      //  }
-		       // return null;
-		  //  });
-		   // expenseDialog.showAndWait();
-		//});
-		
+		addExpenseButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				expenseDialog.setResultConverter(dialogButton -> {
+					if (dialogButton == addExpenseOKButton) {
+						String name = expenseNameField.getText();
+						double amount = Double.parseDouble(expenseAmountField.getText());
+						int frequencyInDays = Integer.parseInt(expenseFrequencyField.getText());
+						// Create a new Expense object with the entered details
+						Expense newExpense = new Expense(name, amount, frequencyInDays);
+						// You can add this newExpense to your user's expense list here
+						currentUser.addNewExpense(newExpense);
+						expenseDialog.close();
+					}
+					return null;
+				});
+				expenseDialog.showAndWait();
+			}
+		});
+
+		// Create a button to clear all incomes
+		Button clearExpensesButton = new Button("Clear Expenses");
+		HBox clearExpensesHBox = new HBox(10);
+		clearExpensesHBox.setAlignment(Pos.CENTER_RIGHT);
+		clearExpensesHBox.getChildren().add(clearExpensesButton);
+		grid3.add(clearExpensesHBox, 1, 10);
+
 		clearExpensesButton.setOnAction(event -> {
 		    // Clear all expenses in the current user's expense list
 		    currentUser.getExpenseList().clear();
