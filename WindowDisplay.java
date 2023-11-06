@@ -1,5 +1,5 @@
 /*
- * Author(s): Danyel Munson, Evan Bradford, Calder Neely, Noah Waldorf, Samuel Wright
+ * Author(s): Danyel Munson, Evan Bradford, Calder Neely, Noah Waldorf, Samuel Wright, Pantaree Prathongkham
  * Created: 10-11-2023
  * Last Updated: 10-23-2023
  */
@@ -590,6 +590,82 @@ public class WindowDisplay extends Application {
 
 			}
 		});
+
+		//Start of Pan's work
+
+        	Label emailLabel = new Label("Email: " + currentUser.getEmail());
+        	grid3.add(emailLabel, 15, 20);
+
+        	Button changeUsernameButton = new Button("Change Username");
+        	HBox h7 = new HBox(10);
+        	h7.setAlignment(Pos.BASELINE_RIGHT);
+        	h7.getChildren().add(changeUsernameButton);
+        	grid3.add(h7, 15, 21);
+
+        	Button changePasswordButton = new Button("Change Password");
+        	HBox h8 = new HBox(10);
+        	h8.setAlignment(Pos.BASELINE_RIGHT);
+        	h8.getChildren().add(changePasswordButton);
+        	grid3.add(h8, 15, 22);
+
+        	Button addEmailButton = new Button("Add Email");
+        	HBox h9 = new HBox(10);
+        	h9.setAlignment(Pos.BASELINE_RIGHT);
+        	h9.getChildren().add(addEmailButton);
+        	grid3.add(h9, 15, 23);
+
+        	// Change username button action
+        	changeUsernameButton.setOnAction(new EventHandler<ActionEvent>() {
+            	@Override
+            public void handle(ActionEvent event) {
+                TextInputDialog dialog = new TextInputDialog(currentUser.getName());
+                dialog.setTitle("Change Username");
+                dialog.setHeaderText("Enter your new username:");
+                dialog.setContentText("Username:");
+
+                Optional<String> result = dialog.showAndWait();
+                result.ifPresent(newName -> {
+                    currentUser.changeUsername(newName);
+                    username.setText("Username: " + newName);
+                });
+            }
+        });
+
+        // Change password button action
+        changePasswordButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                TextInputDialog dialog = new TextInputDialog("");
+                dialog.setTitle("Change Password");
+                dialog.setHeaderText("Enter your new password:");
+                dialog.setContentText("Password:");
+
+                Optional<String> result = dialog.showAndWait();
+                result.ifPresent(newPassword -> {
+                    currentUser.changePassword(newPassword);
+                    // Don't need to update the password label here
+                });
+            }
+        });
+
+        // Add email button action
+        addEmailButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                TextInputDialog dialog = new TextInputDialog("");
+                dialog.setTitle("Add Email");
+                dialog.setHeaderText("Enter your email address:");
+                dialog.setContentText("Email:");
+
+                Optional<String> result = dialog.showAndWait();
+                result.ifPresent(newEmail -> {
+                    currentUser.setEmail(newEmail);
+                    emailLabel.setText("Email: " + newEmail);
+                });
+            }
+        });
+        
+        //End of Pan's work
 
 
 		// scene setup
