@@ -235,7 +235,7 @@ public class WindowDisplay extends Application {
 
 		// Financial info grid
 		GridPane grid3 = new GridPane();
-		grid3.setAlignment(Pos.TOP_CENTER);
+		grid3.setAlignment(Pos.TOP_LEFT);
 		grid3.setHgap(5);
 		grid3.setVgap(10);
 		grid3.setPadding(new Insets(25,25,25,25));
@@ -506,15 +506,15 @@ public class WindowDisplay extends Application {
 		
 		// See future balance
 		Label futureBalance = new Label("Enter Number of Days:");
-		grid3.add(futureBalance,0,40);
+		grid3.add(futureBalance,0,49);
 		TextField futureBalanceT = new TextField();	
-		grid3.add(futureBalanceT,1,40);
+		grid3.add(futureBalanceT,1,49);
 
 		Button futureBalanceButton = new Button("See Future Balance");
 		HBox futureHBox = new HBox(10);
 		futureHBox.setAlignment(Pos.CENTER_RIGHT);
 		futureHBox.getChildren().add(futureBalanceButton);
-		grid3.add(futureHBox, 2, 40);
+		grid3.add(futureHBox, 2, 49);
 
 		//Reset Button
 		Button resetBalanceButton = new Button("Reset");
@@ -659,25 +659,25 @@ public class WindowDisplay extends Application {
 		//Start of Pan's work
 
         	Label emailLabel = new Label("Email: " + currentUser.getEmail());
-        	grid3.add(emailLabel, 15, 20);
+        	grid3.add(emailLabel, 175, 0);
 
         	Button changeUsernameButton = new Button("Change Username");
-        	HBox h7 = new HBox(10);
-        	h7.setAlignment(Pos.BASELINE_RIGHT);
+        	HBox h7 = new HBox(5);
+        	h7.setAlignment(Pos.BOTTOM_RIGHT);
         	h7.getChildren().add(changeUsernameButton);
-        	grid3.add(h7, 15, 21);
+        	grid3.add(h7, 175, 1);
 
         	Button changePasswordButton = new Button("Change Password");
-        	HBox h8 = new HBox(10);
-        	h8.setAlignment(Pos.BASELINE_RIGHT);
+        	HBox h8 = new HBox(5);
+        	h8.setAlignment(Pos.BOTTOM_RIGHT);
         	h8.getChildren().add(changePasswordButton);
-        	grid3.add(h8, 15, 22);
+        	grid3.add(h8, 175, 2);
 
         	Button addEmailButton = new Button("Add Email");
-        	HBox h9 = new HBox(10);
-        	h9.setAlignment(Pos.BASELINE_RIGHT);
+        	HBox h9 = new HBox(5);
+        	h9.setAlignment(Pos.BOTTOM_RIGHT);
         	h9.getChildren().add(addEmailButton);
-        	grid3.add(h9, 15, 23);
+        	grid3.add(h9, 175, 3);
 
         	// Change username button action
         	changeUsernameButton.setOnAction(new EventHandler<ActionEvent>() {
