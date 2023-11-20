@@ -423,12 +423,12 @@ public class WindowDisplay extends Application {
 		// END SAM'S WORK ON CUSTOM INCOME AND EXPENSE BUTTONS
 		
 		// income
+		Text incomeText = new Text("Income");
+		incomeText.setFont(Font.font("TimesRoman", FontWeight.BOLD, 30));
+		grid3.add(incomeText, 0, 4, 2, 1);
 		List<Income> incomeList = currentUser.getIncomeList();
 		if (!incomeList.isEmpty()) {
 			Income i = incomeList.get(0); // Assuming you want to display the first income item
-			Text incomeText = new Text("Income");
-			incomeText.setFont(Font.font("TimesRoman", FontWeight.BOLD, 30));
-			grid3.add(incomeText, 0, 4, 2, 1);
 
 			Label incomeNLabel = new Label("Income Name: " + i.getName());
 			grid3.add(incomeNLabel, 0, 5);
@@ -488,12 +488,12 @@ public class WindowDisplay extends Application {
 		});
 
 		// expense
+		Text expenseText = new Text("Expense");
+		expenseText.setFont(Font.font("TimesRoman", FontWeight.BOLD, 30));
+		grid3.add(expenseText, 1, 4, 2, 1);
 		List<Expense> expenseList = currentUser.getExpenseList();
 		if (!expenseList.isEmpty()) {
 			Expense e = expenseList.get(0); // Assuming you want to display the first expense item
-			Text expenseText = new Text("Expense");
-			expenseText.setFont(Font.font("TimesRoman", FontWeight.BOLD, 30));
-			grid3.add(expenseText, 1, 4, 2, 1);
 
 			Label expenseNLabel = new Label("Expense Name: " + e.getName());
 			grid3.add(expenseNLabel, 1, 5);
