@@ -751,8 +751,6 @@ public class WindowDisplay extends Application {
 		if ((users.getUser(name) == null) && (name.length() > 0) && (pw.length() > 0)) {
 			User target = users.newUser(name, pw);
 			target.addNewBalance(0.00);
-			target.addNewIncome(new Income("test", 101.11, 14));
-			target.addNewExpense(new Expense("test", 100.50, 7));
 			return 0;
 		} else if (name.length() == 0){
 			return 1;
@@ -776,8 +774,6 @@ public class WindowDisplay extends Application {
 			if ((users.getList().get(name)).equals(password)) {
 				this.currentUser = target;
 				currentUser = target;
-				//currentUser.addNewIncome(new Income("test", 101.11, 14));
-				//currentUser.addNewExpense(new Expense("test", 100.50, 7));
 				return 2;
 			} else {
 				return 1;
