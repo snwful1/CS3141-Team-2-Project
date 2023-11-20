@@ -30,7 +30,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.Scanner;
-
+import java.util.List;
 
 public class WindowDisplay extends Application {
 
@@ -427,19 +427,22 @@ public class WindowDisplay extends Application {
 		// END SAM'S WORK ON CUSTOM INCOME AND EXPENSE BUTTONS
 		
 		// income
-		Income i = currentUser.getIncomeList().get(0);
-		Text incomeText = new Text("Income");
-		incomeText.setFont(Font.font("TimesRoman", FontWeight.BOLD, 30));
-		grid3.add(incomeText,0,4,2,1);
+		List<Income> incomeList = currentUser.getIncomeList();
+		if (!incomeList.isEmpty()) {
+			Income i = incomeList.get(0); // Assuming you want to display the first income item
+			Text incomeText = new Text("Income");
+			incomeText.setFont(Font.font("TimesRoman", FontWeight.BOLD, 30));
+			grid3.add(incomeText, 0, 4, 2, 1);
 
-		Label incomeNLabel = new Label("Income Name: " + i.getName());
-		grid3.add(incomeNLabel, 0, 5);
+			Label incomeNLabel = new Label("Income Name: " + i.getName());
+			grid3.add(incomeNLabel, 0, 5);
 
-		Label incomeALabel = new Label("Income Amount: $" + i.getAmount());
-		grid3.add(incomeALabel, 0, 6);
+			Label incomeALabel = new Label("Income Amount: $" + i.getAmount());
+			grid3.add(incomeALabel, 0, 6);
 
-		Label incomeFLabel = new Label("Income Frequency: " + i.getFrequencyInDays() + " days");
-		grid3.add(incomeFLabel, 0, 7);
+			Label incomeFLabel = new Label("Income Frequency: " + i.getFrequencyInDays() + " days");
+			grid3.add(incomeFLabel, 0, 7);
+		}
 
 		Button b5 = new Button("Apply Manually");
 		HBox h5 = new HBox(10);
@@ -460,49 +463,101 @@ public class WindowDisplay extends Application {
 					e.printStackTrace();
 				}
 
-				double balanceVal = dataScan.nextDouble() + i.getAmount();
+				double balanceVal = dataScan.nextDouble();
+				List<Income> incomeList = currentUser.getIncomeList();
+				if (!incomeList.isEmpty()) {
+					Income i = incomeList.get(0);
+					balanceVal += i.getAmount();
+				}
 				dataScan.close();
 				String str = String.format("Balance: %.2f", balanceVal);
 				balanceLabel.setText(str);
 
-				try{
+				try {
 					FileWriter myWriter = new FileWriter("output/userdata/" + currentUser.getName() + ".txt", false);
-					myWriter.write(balanceVal +"\n");
+					myWriter.write(balanceVal + "\n");
 
-					Income i = currentUser.getIncomeList().get(0);
-					myWriter.write("Income: " + i.getName() + " " + i.getAmount() + " " + i.getFrequencyInDays() + "\n");
+					if (!incomeList.isEmpty()) {
+						Income i = incomeList.get(0);
+						myWriter.write("Income: " + i.getName() + " " + i.getAmount() + " " + i.getFrequencyInDays() + "\n");
+					}
 					Expense e = currentUser.getExpenseList().get(0); // hardcoded for 1, need loop to get more
 					myWriter.write("Expense: " + e.getName() + " " + e.getAmount() + " " + e.getFrequencyInDays() + "\n");
 					myWriter.close();
-				}catch (IOException e) {
+				} catch (IOException e) {
 					System.out.println("Failed to write user data");
 					e.printStackTrace();
 				}
-
-
 			}
 		});
 
 		// expense
-		Expense e = currentUser.getExpenseList().get(0);
-		Text expenseText = new Text("Expense");
-		expenseText.setFont(Font.font("TimesRoman", FontWeight.BOLD, 30));
-		grid3.add(expenseText,1,4,2,1);
+		List<Expense> expenseList = currentUser.getExpenseList();
+		if (!expenseList.isEmpty()) {
+			Expense e = expenseList.get(0); // Assuming you want to display the first expense item
+			Text expenseText = new Text("Expense");
+			expenseText.setFont(Font.font("TimesRoman", FontWeight.BOLD, 30));
+			grid3.add(expenseText, 1, 4, 2, 1);
 
-		Label expenseNLabel = new Label("Expense Name: " + e.getName());
-		grid3.add(expenseNLabel, 1, 5);
+			Label expenseNLabel = new Label("Expense Name: " + e.getName());
+			grid3.add(expenseNLabel, 1, 5);
 
-		Label expenseALabel = new Label("Expense Amount: $" + e.getAmount());
-		grid3.add(expenseALabel, 1, 6);
+			Label expenseALabel = new Label("Expense Amount: $" + e.getAmount());
+			grid3.add(expenseALabel, 1, 6);
 
-		Label expenseFLabel = new Label("Expense Frequency: " + e.getFrequencyInDays() + " days");
-		grid3.add(expenseFLabel, 1, 7);
+			Label expenseFLabel = new Label("Expense Frequency: " + e.getFrequencyInDays() + " days");
+			grid3.add(expenseFLabel, 1, 7);
+		}
 
 		Button b6 = new Button("Apply Manually");
 		HBox h6 = new HBox(10);
 		h6.setAlignment(Pos.CENTER_RIGHT);
 		h6.getChildren().add(b6);
 		grid3.add(h6, 1, 8);
+
+		b6.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+
+				Scanner dataScan = null;
+				try {
+					File dataFile = new File("output/userdata/" + currentUser.getName() + ".txt");
+					dataScan = new Scanner(dataFile);
+				} catch (IOException e) {
+					System.out.println("Failed to load users' data");
+					e.printStackTrace();
+				}
+
+				double balanceVal = dataScan.nextDouble();
+				List<Expense> expenseList = currentUser.getExpenseList();
+				if (!expenseList.isEmpty()) {
+					Expense e = expenseList.get(0);
+					balanceVal -= e.getAmount();
+				}
+				dataScan.close();
+				String str = String.format("Balance: %.2f", balanceVal);
+				balanceLabel.setText(str);
+
+				try {
+					FileWriter myWriter = new FileWriter("output/userdata/" + currentUser.getName() + ".txt", false);
+					myWriter.write(balanceVal + "\n");
+
+					List<Income> incomeList = currentUser.getIncomeList();
+					if (!incomeList.isEmpty()) {
+						Income i = incomeList.get(0);
+						myWriter.write("Income: " + i.getName() + " " + i.getAmount() + " " + i.getFrequencyInDays() + "\n");
+					}
+					if (!expenseList.isEmpty()) {
+						Expense e = expenseList.get(0);
+						myWriter.write("Expense: " + e.getName() + " " + e.getAmount() + " " + e.getFrequencyInDays() + "\n");
+					}
+					myWriter.close();
+				} catch (IOException e) {
+					System.out.println("Failed to write user data");
+					e.printStackTrace();
+				}
+			}
+		});
 		
 		// See future balance
 		Label futureBalance = new Label("Enter Number of Days:");
@@ -620,42 +675,6 @@ public class WindowDisplay extends Application {
 			}
 		});
 
-		b6.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-
-				Scanner dataScan = null;
-				try {
-					File dataFile = new File("output/userdata/" +currentUser.getName() + ".txt");
-					dataScan = new Scanner(dataFile);
-				} catch (IOException e) {
-					System.out.println("Failed to load users' data");
-					e.printStackTrace();
-				}
-
-				double balanceVal = dataScan.nextDouble() - e.getAmount();
-				dataScan.close();
-				String str = String.format("Balance: %.2f", balanceVal);
-				balanceLabel.setText(str);
-
-				try{
-					FileWriter myWriter = new FileWriter("output/userdata/" +currentUser.getName() + ".txt", false);
-					myWriter.write(balanceVal +"\n");
-
-					Income i = currentUser.getIncomeList().get(0);
-					myWriter.write("Income: " + i.getName() + " " + i.getAmount() + " " + i.getFrequencyInDays() + "\n");
-					Expense e = currentUser.getExpenseList().get(0); // hardcoded for 1, need loop to get more
-					myWriter.write("Expense: " + e.getName() + " " + e.getAmount() + " " + e.getFrequencyInDays() + "\n");
-					myWriter.close();
-				}catch (IOException e) {
-					System.out.println("Failed to write user data");
-					e.printStackTrace();
-				}
-
-
-			}
-		});
-
 		//Start of Pan's work
 
         	Label emailLabel = new Label("Email: " + currentUser.getEmail());
@@ -751,8 +770,6 @@ public class WindowDisplay extends Application {
 		if ((users.getUser(name) == null) && (name.length() > 0) && (pw.length() > 0)) {
 			User target = users.newUser(name, pw);
 			target.addNewBalance(0.00);
-			target.addNewIncome(new Income("null", 0, 0));
-			target.addNewExpense(new Expense("null", 0, 0));
 			return 0;
 		} else if (name.length() == 0){
 			return 1;
