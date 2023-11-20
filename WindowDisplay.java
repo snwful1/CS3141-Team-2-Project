@@ -751,6 +751,8 @@ public class WindowDisplay extends Application {
 		if ((users.getUser(name) == null) && (name.length() > 0) && (pw.length() > 0)) {
 			User target = users.newUser(name, pw);
 			target.addNewBalance(0.00);
+			target.addNewIncome(new Income("null", 0, 0));
+			target.addNewExpense(new Expense("null", 0, 0));
 			return 0;
 		} else if (name.length() == 0){
 			return 1;
