@@ -28,12 +28,12 @@ import javafx.scene.control.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Optional;
-import java.util.Scanner;
-import java.util.List;
+import java.util.*;
 
 public class WindowDisplay extends Application {
 
+	GridPane grid3;
+	
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -234,7 +234,7 @@ public class WindowDisplay extends Application {
 		//grid2.add(phoneNumber, 0, 4);
 
 		// Financial info grid
-		GridPane grid3 = new GridPane();
+		grid3 = new GridPane();
 		grid3.setAlignment(Pos.TOP_LEFT);
 		grid3.setHgap(5);
 		grid3.setVgap(10);
