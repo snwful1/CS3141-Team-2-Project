@@ -341,6 +341,7 @@ public class WindowDisplay extends Application {
 					return null;
 				});
 				dialog.showAndWait();
+				updateIncomeDisplay();
 			}
 		});
 
@@ -354,10 +355,7 @@ public class WindowDisplay extends Application {
 		clearIncomesButton.setOnAction(event -> {
 			// Clear all incomes in the current user's income list
 			currentUser.getIncomeList().clear();
-
-			// ADD SOMETHING HERE TO UPDATE USER FILE
-
-			// ADD SOMETHING HERE IF YOU WANT TO DISPLAY MESSAGE
+			clearIncomeDisplay();
 		});
 
 		// add custom expense button
@@ -405,6 +403,7 @@ public class WindowDisplay extends Application {
 					return null;
 				});
 				expenseDialog.showAndWait();
+				updateExpenseDisplay();
 			}
 		});
 
@@ -418,10 +417,7 @@ public class WindowDisplay extends Application {
 		clearExpensesButton.setOnAction(event -> {
 		    // Clear all expenses in the current user's expense list
 		    currentUser.getExpenseList().clear();
-
- 		    // ADD SOMETHING HERE TO UPDATE USER FILE
-
-		    // ADD SOMETHING HERE IF YOU WANT TO DISPLAY A MESSAGE
+		    clearExpenseDisplay();
 		});
 
 		// END SAM'S WORK ON CUSTOM INCOME AND EXPENSE BUTTONS
@@ -800,5 +796,74 @@ public class WindowDisplay extends Application {
 		} else {
 			return 0;
 		}
+	}
+	
+	private void updateIncomeDisplay() {
+		// Assuming grid3 is the GridPane where you display the income information
+		// Clear existing income display elements from the grid3
+		clearIncomeDisplay();
+
+		// Get updated income list
+		List<Income> incomeList = currentUser.getIncomeList();
+		int incomeRow = 5; // Starting row for displaying income, adjust as necessary
+
+		for (Income income : incomeList) {
+			// Create and add new labels for each income item
+			grid3.add(new Label("Income Name: " + income.getName()), 0, incomeRow++);
+			grid3.add(new Label("Income Amount: $" + income.getAmount()), 0, incomeRow++);
+			grid3.add(new Label("Income Frequency: " + income.getFrequencyInDays() + " days"), 0, incomeRow++);
+		}
+	}
+
+	private void updateExpenseDisplay() {
+		// Assuming grid3 is the GridPane where you display the expense information
+		// Clear existing expense display elements from the grid3
+		clearExpenseDisplay();
+
+		// Get updated expense list
+		List<Expense> expenseList = currentUser.getExpenseList();
+		int expenseRow = 5; // Starting row for displaying expense, adjust as necessary
+
+		for (Expense expense : expenseList) {
+			// Create and add new labels for each expense item
+			grid3.add(new Label("Expense Name: " + expense.getName()), 1, expenseRow++);
+			grid3.add(new Label("Expense Amount: $" + expense.getAmount()), 1, expenseRow++);
+			grid3.add(new Label("Expense Frequency: " + expense.getFrequencyInDays() + " days"), 1, expenseRow++);
+		}
+	}
+
+	private void clearIncomeDisplay() {
+		// Assuming income information is in column 0
+		int incomeColumn = 0;
+		// Starting from row 5 to row 8 for income display based on the provided layout
+		for (int row = 5; row < 8; row++) {
+			removeNodesFromGridPaneByRowAndColumn(grid3, incomeColumn, row);
+		}
+	}
+
+	private void clearExpenseDisplay() {
+		// Assuming expense information is in column 1
+		int expenseColumn = 1;
+		// Starting from row 5 to row 8 for expense display based on the provided layout
+		for (int row = 5; row < 8; row++) {
+			removeNodesFromGridPaneByRowAndColumn(grid3, expenseColumn, row);
+		}
+	}
+
+	// Utility method to remove nodes by row and column in a GridPane
+	private void removeNodesFromGridPaneByRowAndColumn(GridPane gridPane, int column, int row) {
+		Set<Node> nodesToRemove = new HashSet<>();
+		for (Node node : gridPane.getChildren()) {
+			// Check the row and column index of the node (null check is necessary)
+			Integer rowIndex = GridPane.getRowIndex(node);
+			Integer colIndex = GridPane.getColumnIndex(node);
+			rowIndex = rowIndex == null ? 0 : rowIndex; // Default to 0 if no index is set
+			colIndex = colIndex == null ? 0 : colIndex; // Default to 0 if no index is set
+			if (rowIndex == row && colIndex == column) {
+				nodesToRemove.add(node);
+			}
+		}
+		// Remove the collected nodes
+		gridPane.getChildren().removeAll(nodesToRemove);
 	}
 }
