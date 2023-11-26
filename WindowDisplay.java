@@ -256,6 +256,7 @@ public class WindowDisplay extends Application {
 		double balanceVal = dataScan.nextDouble();
 		dataScan.close();
 		Label balanceLabel = new Label("Balance: " + balanceVal);
+		balanceLabel.getStyleClass().add("balanceDisplay");
 		grid3.add(balanceLabel, 1, 1,2,1);
 
 		Label setBalance = new Label("Set Balance:");

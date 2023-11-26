@@ -22,6 +22,12 @@
     -fx-font-size: 20;
 }
 
+.balanceDisplay{
+    -fx-font-family: TimesRoman;
+    -fx-font-size: 30;
+    -fx-font-weight: BOLD;
+    -fx-text-fill: black;
+}
 
 
 
