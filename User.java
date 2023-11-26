@@ -1,7 +1,7 @@
 /*
  * Author(s): Samuel Wright, Calder Neely, Evan Bradford, Noah Waldorf, Pan Prathongkham
  * Created: 10-12-2023
- * Last edited: 11-05-2023
+ * Last edited: 11-26-2023
  */
 
 import java.io.File;
@@ -19,9 +19,17 @@ public class User {
     private String email;
     private double balance;
 
-    public User(String name) { //, String password
+    public User(String name, String password, String email) {
         this.name = name;
         this.password = password;
+        this.email = email;
+        incomeList = new ArrayList<Income>();
+        expenseList = new ArrayList<Expense>();
+        initUser();
+    }
+
+    public User(String name) {
+        this.name = name;
         incomeList = new ArrayList<Income>();
         expenseList = new ArrayList<Expense>();
         initUser();
@@ -30,6 +38,12 @@ public class User {
     public String getName() {
         return name;
     }
+
+    public void setName(String name) {this.name = name;}
+
+    public String getPassword() { return password;}
+
+    public void setPassword(String password) { this.password = password;}
 
     public ArrayList<Expense> getExpenseList() {
         return expenseList;
