@@ -1,7 +1,7 @@
 /*
  * Author(s): Samuel Wright, Calder Neely, Evan Bradford, Noah Waldorf
  * Created: 10-16-2023
- * Last Updated: 10-22-2023
+ * Last Updated: 10-26-2023
  */
 
 import java.io.File;
@@ -117,12 +117,11 @@ public class Users {
     }
 
     /**
-     * Changes password of user's hashmap
-     * @param name The username of the User
-     * @param newPassword The new password
+     * Get the number of users in the Arraylist userList
+     * @return The number of users
      */
-    public void setPassword(String name, String newPassword) {
-        // Todo: implement the change of password in the hashmap
+    public int size() {
+        return userList.size();
     }
 
     /**
@@ -131,15 +130,30 @@ public class Users {
      * @param newName The new username of User
      */
     public void setName(String oldName, String newName) {
-        // Todo: implement the change of username in hashmap and User
+        User user = getUser(oldName);
+        if (user != null) {
+            userList.remove(user);
+            user.setName(newName);
+            userList.add(user);
+            // Update the username in the USERS HashMap
+            USERS.remove(oldName);
+            USERS.put(newName, user.getPassword());
+        }
     }
 
     /**
-     * Get the number of users in the Arraylist userList
-     * @return The number of users
+     * Changes password of user's hashmap
+     * @param name The username of the User
+     * @param newPassword The new password
      */
-    public int size() {
-        return userList.size();
+    public void setPassword(String name, String newPassword) {
+        User user = getUser(name);
+        if (user != null) {
+            user.setPassword(newPassword);
+            // Update the password in the USERS HashMap
+            USERS.put(name, newPassword);
+        }
     }
+
 
 }
