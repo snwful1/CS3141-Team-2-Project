@@ -1,10 +1,11 @@
 /*
  * Author(s): Danyel Munson, Evan Bradford, Calder Neely, Noah Waldorf, Samuel Wright, Pantaree Prathongkham
  * Created: 10-11-2023
- * Last Updated: 10-23-2023
+ * Last Updated: 10-26-2023
  */
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -33,7 +34,7 @@ import java.util.*;
 public class WindowDisplay extends Application {
 
 	GridPane grid3;
-	
+
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -294,7 +295,7 @@ public class WindowDisplay extends Application {
 		});
 
 		// START SAM'S WORK ON CUSTOM INCOME AND EXPENSE BUTTONS
-		
+
 		// ADD INCOME BUTTON DEFINITION
 		Button addIncomeButton = new Button("Add Income");
 		HBox addIncomeHBox = new HBox(10);
@@ -311,9 +312,9 @@ public class WindowDisplay extends Application {
 		DialogPane dialogPane = new DialogPane();
 		dialogPane.setHeaderText("Enter Income Details");
 		dialogPane.setContent(new VBox(10,
-			new Label("Income Name:"), incomeNameField,
-			new Label("Income Amount:"), incomeAmountField,
-			new Label("Income Frequency (in days):"), incomeFrequencyField
+				new Label("Income Name:"), incomeNameField,
+				new Label("Income Amount:"), incomeAmountField,
+				new Label("Income Frequency (in days):"), incomeFrequencyField
 		));
 
 		Dialog<ButtonType> dialog = new Dialog<>();
@@ -375,18 +376,18 @@ public class WindowDisplay extends Application {
 		DialogPane expenseDialogPane = new DialogPane();
 		expenseDialogPane.setHeaderText("Enter Expense Details");
 		expenseDialogPane.setContent(new VBox(10,
-		        new Label("Expense Name:"), expenseNameField,
-		        new Label("Expense Amount:"), expenseAmountField,
-		        new Label("Expense Frequency (in days):"), expenseFrequencyField
+				new Label("Expense Name:"), expenseNameField,
+				new Label("Expense Amount:"), expenseAmountField,
+				new Label("Expense Frequency (in days):"), expenseFrequencyField
 		));
-		
+
 		Dialog<ButtonType> expenseDialog = new Dialog<>();
 		expenseDialog.setDialogPane(expenseDialogPane);
 		expenseDialog.setTitle("Add Expense");
-		
+
 		ButtonType addExpenseOKButton = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
 		expenseDialog.getDialogPane().getButtonTypes().addAll(addExpenseOKButton, ButtonType.CANCEL);
-		
+
 		addExpenseButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -416,13 +417,13 @@ public class WindowDisplay extends Application {
 		grid3.add(clearExpensesHBox, 1, 10);
 
 		clearExpensesButton.setOnAction(event -> {
-		    // Clear all expenses in the current user's expense list
-		    currentUser.getExpenseList().clear();
-		    clearExpenseDisplay();
+			// Clear all expenses in the current user's expense list
+			currentUser.getExpenseList().clear();
+			clearExpenseDisplay();
 		});
 
 		// END SAM'S WORK ON CUSTOM INCOME AND EXPENSE BUTTONS
-		
+
 		// income
 		Text incomeText = new Text("Income");
 		incomeText.setFont(Font.font("TimesRoman", FontWeight.BOLD, 30));
@@ -555,11 +556,11 @@ public class WindowDisplay extends Application {
 				}
 			}
 		});
-		
+
 		// See future balance
 		Label futureBalance = new Label("Enter Number of Days:");
 		grid3.add(futureBalance,0,49);
-		TextField futureBalanceT = new TextField();	
+		TextField futureBalanceT = new TextField();
 		grid3.add(futureBalanceT,1,49);
 
 		Button futureBalanceButton = new Button("See Future Balance");
@@ -576,7 +577,7 @@ public class WindowDisplay extends Application {
 			public void handle(ActionEvent event) {
 				balanceLabel.setText("Balance: " + balanceVal);	// Reset balance to actual balance
 				futureBalanceT.setText("");				// Reset number of days text box
-			}	
+			}
 		});
 		futureBalanceButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -584,7 +585,7 @@ public class WindowDisplay extends Application {
 				double currentBalance = currentUser.getBalance();
 				double futureTotal = currentBalance;								// Initialize to current balance
 				// Inputted number of future days
-				int days = Integer.parseInt(futureBalanceT.getText());				
+				int days = Integer.parseInt(futureBalanceT.getText());
 				Double amount;
 				int freq = 0;
 
@@ -672,82 +673,57 @@ public class WindowDisplay extends Application {
 			}
 		});
 
-		//Start of Pan's work
+		//Start Pan's work (Sprint 3)
+		//Setting Button
+		Button settingsButton = new Button("User Settings");
+		HBox settingsBox = new HBox(20);
+		settingsBox.setAlignment(Pos.BOTTOM_RIGHT);
+		settingsBox.getChildren().add(settingsButton);
+		grid3.add(settingsBox, 50, 50);
 
-        	Label emailLabel = new Label("Email: " + currentUser.getEmail());
-        	grid3.add(emailLabel, 175, 0);
+		settingsButton.setOnAction(e -> {
+			// Create a dialog for user settings
+			Dialog<String> dialog1 = new Dialog<>();
+			dialog1.setTitle("User Settings");
+			dialog.setHeaderText("Change Username, Password, or Email");
 
-        	Button changeUsernameButton = new Button("Change Username");
-        	HBox h7 = new HBox(5);
-        	h7.setAlignment(Pos.BOTTOM_RIGHT);
-        	h7.getChildren().add(changeUsernameButton);
-        	grid3.add(h7, 175, 1);
+			// Set the button types
+			ButtonType changeButton = new ButtonType("Save Change", ButtonBar.ButtonData.OK_DONE);
+			dialog1.getDialogPane().getButtonTypes().addAll(changeButton, ButtonType.CANCEL);
 
-        	Button changePasswordButton = new Button("Change Password");
-        	HBox h8 = new HBox(5);
-        	h8.setAlignment(Pos.BOTTOM_RIGHT);
-        	h8.getChildren().add(changePasswordButton);
-        	grid3.add(h8, 175, 2);
+			// Create and configure the username, password, email fields
+			TextField newUsername = new TextField();
+			newUsername.setPromptText("New Username");
+			PasswordField newPassword = new PasswordField();
+			newPassword.setPromptText("New Password");
+			TextField newEmail = new TextField();
+			newEmail.setPromptText("Add Email");
 
-        	Button addEmailButton = new Button("Add Email");
-        	HBox h9 = new HBox(5);
-        	h9.setAlignment(Pos.BOTTOM_RIGHT);
-        	h9.getChildren().add(addEmailButton);
-        	grid3.add(h9, 175, 3);
+			VBox content = new VBox(20);
+			content.getChildren().addAll(newUsername, newPassword,newEmail);
+			dialog1.getDialogPane().setContent(content);
 
-        	// Change username button action
-        	changeUsernameButton.setOnAction(new EventHandler<ActionEvent>() {
-            	@Override
-            public void handle(ActionEvent event) {
-                TextInputDialog dialog = new TextInputDialog(currentUser.getName());
-                dialog.setTitle("Change Username");
-                dialog.setHeaderText("Enter your new username:");
-                dialog.setContentText("Username:");
+			// Request focus on the username field by default
+			Platform.runLater(() -> newUsername.requestFocus());
 
-                Optional<String> result = dialog.showAndWait();
-                result.ifPresent(newName -> {
-                    currentUser.changeUsername(newName);
-                    username.setText("Username: " + newName);
-                });
-            }
-        });
+			// Handle button actions
+			dialog1.setResultConverter(dialogButton -> {
+				if (dialogButton == changeButton) {
+					// Implement logic to change the username and password
+					String updatedUsername = newUsername.getText();
+					String updatedPassword = newPassword.getText();
+					String updatedEmail = newEmail.getText();
+					// Update the user details accordingly
+					// For instance: currentUser.setName(updatedUsername);
+					//               currentUser.setPassword(updatedPassword);
+				}
+				return null;
+			});
 
-        // Change password button action
-        changePasswordButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                TextInputDialog dialog = new TextInputDialog("");
-                dialog.setTitle("Change Password");
-                dialog.setHeaderText("Enter your new password:");
-                dialog.setContentText("Password:");
+			dialog1.showAndWait();
+		});
 
-                Optional<String> result = dialog.showAndWait();
-                result.ifPresent(newPassword -> {
-                    currentUser.changePassword(newPassword);
-                    // Don't need to update the password label here
-                });
-            }
-        });
-
-        // Add email button action
-        addEmailButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                TextInputDialog dialog = new TextInputDialog("");
-                dialog.setTitle("Add Email");
-                dialog.setHeaderText("Enter your email address:");
-                dialog.setContentText("Email:");
-
-                Optional<String> result = dialog.showAndWait();
-                result.ifPresent(newEmail -> {
-                    currentUser.setEmail(newEmail);
-                    emailLabel.setText("Email: " + newEmail);
-                });
-            }
-        });
-        
-        //End of Pan's work
-
+		//End of Pan's work(Sprint 3)
 
 		// scene setup
 		Scene account = new Scene(grid3, 250, 500);
@@ -798,7 +774,7 @@ public class WindowDisplay extends Application {
 			return 0;
 		}
 	}
-	
+
 	private void updateIncomeDisplay() {
 		// Assuming grid3 is the GridPane where you display the income information
 		// Clear existing income display elements from the grid3
