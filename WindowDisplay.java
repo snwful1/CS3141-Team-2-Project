@@ -301,9 +301,9 @@ public class WindowDisplay extends Application {
 		HBox addIncomeHBox = new HBox(10);
 		addIncomeHBox.setAlignment(Pos.CENTER_RIGHT);
 		addIncomeHBox.getChildren().add(addIncomeButton);
-		grid3.add(addIncomeHBox, 0, 9);
+		grid3.add(addIncomeHBox, 2, 6);
 
-		// INCOME INPUT FIELDS
+		// INCOME INPUT FIELDS (IN DIALOG)
 		TextField incomeNameField = new TextField();
 		TextField incomeAmountField = new TextField();
 		TextField incomeFrequencyField = new TextField();
@@ -352,7 +352,7 @@ public class WindowDisplay extends Application {
 		HBox clearIncomesHBox = new HBox(10);
 		clearIncomesHBox.setAlignment(Pos.CENTER_RIGHT);
 		clearIncomesHBox.getChildren().add(clearIncomesButton);
-		grid3.add(clearIncomesHBox, 0, 10);
+		grid3.add(clearIncomesHBox, 2, 7);
 
 		clearIncomesButton.setOnAction(event -> {
 			// Clear all incomes in the current user's income list
@@ -366,9 +366,9 @@ public class WindowDisplay extends Application {
 		addExpenseHBox.setAlignment(Pos.CENTER_RIGHT);
 		addExpenseHBox.getChildren().add(addExpenseButton);
 		// add button to grid 3
-		grid3.add(addExpenseHBox, 1, 9);
+		grid3.add(addExpenseHBox, 3, 6);
 
-		// EXPENSE INPUT FIELDS
+		// EXPENSE INPUT FIELDS (IN DIALOG)
 		TextField expenseNameField = new TextField();
 		TextField expenseAmountField = new TextField();
 		TextField expenseFrequencyField = new TextField();
@@ -414,7 +414,7 @@ public class WindowDisplay extends Application {
 		HBox clearExpensesHBox = new HBox(10);
 		clearExpensesHBox.setAlignment(Pos.CENTER_RIGHT);
 		clearExpensesHBox.getChildren().add(clearExpensesButton);
-		grid3.add(clearExpensesHBox, 1, 10);
+		grid3.add(clearExpensesHBox, 3, 7);
 
 		clearExpensesButton.setOnAction(event -> {
 			// Clear all expenses in the current user's expense list
@@ -446,7 +446,7 @@ public class WindowDisplay extends Application {
 		HBox h5 = new HBox(10);
 		h5.setAlignment(Pos.CENTER_RIGHT);
 		h5.getChildren().add(b5);
-		grid3.add(h5, 0, 8);
+		grid3.add(h5, 2, 5);
 
 		b5.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -511,7 +511,7 @@ public class WindowDisplay extends Application {
 		HBox h6 = new HBox(10);
 		h6.setAlignment(Pos.CENTER_RIGHT);
 		h6.getChildren().add(b6);
-		grid3.add(h6, 1, 8);
+		grid3.add(h6, 3, 5);
 
 		b6.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -813,7 +813,7 @@ public class WindowDisplay extends Application {
 		// Assuming income information is in column 0
 		int incomeColumn = 0;
 		// Starting from row 5 to row 8 for income display based on the provided layout
-		for (int row = 5; row < 8; row++) {
+		for (int row = 5; row < 14; row++) {
 			removeNodesFromGridPaneByRowAndColumn(grid3, incomeColumn, row);
 		}
 	}
@@ -822,7 +822,7 @@ public class WindowDisplay extends Application {
 		// Assuming expense information is in column 1
 		int expenseColumn = 1;
 		// Starting from row 5 to row 8 for expense display based on the provided layout
-		for (int row = 5; row < 8; row++) {
+		for (int row = 5; row < 14; row++) {
 			removeNodesFromGridPaneByRowAndColumn(grid3, expenseColumn, row);
 		}
 	}
