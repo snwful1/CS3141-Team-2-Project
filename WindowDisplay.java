@@ -10,7 +10,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
@@ -47,8 +46,15 @@ public class WindowDisplay extends Application {
 	int bigText = 60;
 	int smallText = 20;
 
+	String current_style = "styleSheets/styleGreen.css";
+
+	Scene scene = null;
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+
+		// Style Sheet Switching
+
 
 		userList = new Users();
 
@@ -71,6 +77,68 @@ public class WindowDisplay extends Application {
 		grid.setHgap(5);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(50, 25, 25, 25));
+
+		// Style Changing Buttons
+		Label styleLabel = new Label("Themes");
+		grid.add(styleLabel, 1, 29);
+
+		Button greenB = new Button("Forest Green");
+		HBox greenH = new HBox(5);
+		greenH.getChildren().add(greenB);
+		grid.add(greenH, 1, 30);
+
+		Button darkB = new Button("Stone Gray");
+		HBox darkH = new HBox(5);
+		darkH.getChildren().add(darkB);
+		grid.add(darkH, 1, 31);
+
+		Button blueB = new Button("Lake Blue");
+		HBox blueH = new HBox(5);
+		blueH.getChildren().add(blueB);
+		grid.add(blueH, 2, 30);
+
+		Button redB = new Button("Clay Red");
+		HBox redH = new HBox(5);
+		redH.getChildren().add(redB);
+		grid.add(redH, 2, 31);
+
+		greenB.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				current_style = "styleSheets/styleGreen.css";
+				scene.getStylesheets().clear();
+				scene.getStylesheets().add(WindowDisplay.class.getResource(current_style).toExternalForm());
+			}
+		});
+
+		darkB.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				current_style = "styleSheets/styleDark.css";
+				scene.getStylesheets().clear();
+				scene.getStylesheets().add(WindowDisplay.class.getResource(current_style).toExternalForm());
+			}
+		});
+
+		blueB.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				current_style = "styleSheets/styleBlue.css";
+				scene.getStylesheets().clear();
+				scene.getStylesheets().add(WindowDisplay.class.getResource(current_style).toExternalForm());
+			}
+		});
+
+		redB.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				current_style = "styleSheets/styleRed.css";
+				scene.getStylesheets().clear();
+				scene.getStylesheets().add(WindowDisplay.class.getResource(current_style).toExternalForm());
+			}
+		});
+
+
 
 		// User Creator Labels and Textfields
 		Text userCreation = new Text("  Create User");
@@ -172,7 +240,7 @@ public class WindowDisplay extends Application {
 				if(loginOutcome == 2){
 					loginError.setText("Login Successful!");
 					loginError.setFill(Color.DARKGREEN);
-					loadAccountDetails(currentUser);
+					loadAccountDetails(currentUser, current_style);
 					((Node) (event.getSource())).getScene().getWindow().hide();
 				}
 			}
@@ -183,12 +251,12 @@ public class WindowDisplay extends Application {
 		// Commented out while working on ui
 		// Group root = new Group(grid);
 
-		Scene scene = new Scene(grid, 250, 500);
+		scene = new Scene(grid, 250, 500);
 		// Add your content to the scene
 
 		//Set the scene on the stage and show the stage
 		primaryStage.setScene(scene);
-		scene.getStylesheets().add(WindowDisplay.class.getResource("styleSheets/style.css").toExternalForm());
+		scene.getStylesheets().add(WindowDisplay.class.getResource(current_style).toExternalForm());
 		primaryStage.show();
 	}
 
@@ -198,7 +266,7 @@ public class WindowDisplay extends Application {
 	}
 
 	//Method that loads the account details tab
-	private void loadAccountDetails(User currentUser) {
+	private void loadAccountDetails(User currentUser, String current) {
 		Stage accountStage = new Stage();
 		accountStage.setTitle("Financial Assistant");
 		accountStage.setX(screen.getVisualBounds().getMinX());
@@ -268,7 +336,6 @@ public class WindowDisplay extends Application {
 		Button b4 = new Button("Set Balance");
 		HBox h4 = new HBox(10);
 		h4.getChildren().add(b4);
-		//h4.setAlignment(Pos.CENTER_LEFT);
 		grid3.add(h4, 2, 2);
 
 		b4.setOnAction(new EventHandler<ActionEvent>() {
@@ -728,7 +795,7 @@ public class WindowDisplay extends Application {
 		// scene setup
 		Scene account = new Scene(grid3, 250, 500);
 		accountStage.setScene(account);
-		account.getStylesheets().add(WindowDisplay.class.getResource("styleSheets/style.css").toExternalForm());
+		account.getStylesheets().add(WindowDisplay.class.getResource(current).toExternalForm());
 		accountStage.show();
 
 	}

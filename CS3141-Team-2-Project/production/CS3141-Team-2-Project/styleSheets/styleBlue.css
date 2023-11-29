@@ -1,0 +1,30 @@
+.root{
+    -fx-background-color: #50a4d5;
+}
+
+.text-field{
+    -fx-background-color: #3a83ab;
+    -fx-border-color: #2a617c;
+    -fx-font-family: Cambria;
+    -fx-font-size: 20;
+}
+
+.button{
+    -fx-background-color: #3a83ab;
+    -fx-border-color: #2a617c;
+    -fx-font-weight: BOLD;
+    -fx-font-family: Cambria;
+    -fx-font-size: 20;
+}
+
+.label {
+    -fx-font-family: Cambria;
+    -fx-font-size: 20;
+}
+
+.balanceDisplay{
+    -fx-font-family: TimesRoman;
+    -fx-font-size: 30;
+    -fx-font-weight: BOLD;
+    -fx-text-fill: black;
+}
