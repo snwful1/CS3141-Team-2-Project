@@ -95,12 +95,12 @@ public class WindowDisplay extends Application {
 		Button blueB = new Button("Lake Blue");
 		HBox blueH = new HBox(5);
 		blueH.getChildren().add(blueB);
-		grid.add(blueH, 2, 30);
+		grid.add(blueH, 1, 32);
 
 		Button redB = new Button("Clay Red");
 		HBox redH = new HBox(5);
 		redH.getChildren().add(redB);
-		grid.add(redH, 2, 31);
+		grid.add(redH, 1, 33);
 
 		greenB.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
