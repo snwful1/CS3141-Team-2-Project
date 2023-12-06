@@ -1,0 +1,5 @@
+test
+1234
+7400.0
+Income: pay 2000.0 14
+Expense: rent 600.0 30
