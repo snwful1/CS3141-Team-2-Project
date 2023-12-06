@@ -12,11 +12,10 @@ import java.util.Scanner;
 
 public class User {
     private String name;
-    private String password;
+    private String password; // Technically passwords should be hashed but this is never going out to public so encrypting files should do.
+    private String email;
     private ArrayList<Expense> expenseList;
     private ArrayList<Income> incomeList;
-    private String phoneNumber;
-    private String email;
     private double balance;
 
     public User(String name, String password, String email) {
@@ -28,58 +27,41 @@ public class User {
         initUser();
     }
 
-    public User(String name) {
+    public User(String name, String password) {
         this.name = name;
+        this.password = password;
         incomeList = new ArrayList<Income>();
         expenseList = new ArrayList<Expense>();
-        initUser();
     }
 
+    // Getters and Setters
     public String getName() {
         return name;
     }
-
     public void setName(String name) {this.name = name;}
 
     public String getPassword() { return password;}
-
     public void setPassword(String password) { this.password = password;}
-
-    public ArrayList<Expense> getExpenseList() {
-        return expenseList;
-    }
-
-    public ArrayList<Income> getIncomeList() {
-        return incomeList;
-    }
 
     public double getBalance() {
         return balance;
     }
-
     public void setBalance(double balance) {
         this.balance = balance;
     }
 
-    //getter and setter for email
     public String getEmail() { return email; }
-
     public void setEmail(String email) { this.email = email; }
 
-    public void changeName(String newName) { this.name = newName;}
-
-    public void changeUsername(String newUsername) {
-        this.name = newUsername;
-        saveUserData();
+    public ArrayList<Expense> getExpenseList() {
+        return expenseList;
     }
-
-    public void changePassword(String newPassword) {
-        this.password = newPassword;
-        saveUserData();
+    public ArrayList<Income> getIncomeList() {
+        return incomeList;
     }
 
     private void saveUserData() {
-        File userFile = new File("output/userdata/" + name + ".txt");
+        File userFile = new File("resources/userdata/" + name + ".txt");
 
         try {
             FileWriter myWriter = new FileWriter(userFile, false);
@@ -98,8 +80,8 @@ public class User {
     }
 
     public void initUser() {
-        File userFile = new File("output/userdata/"+name + ".txt");
-        File userDir = new File("output/userdata");
+        File userFile = new File("resources/userdata/" +name + ".txt");
+        File userDir = new File("resources/userdata");
 
         //Create file if it does not exist and write all incomes and expenses
         try {
@@ -119,38 +101,10 @@ public class User {
         expenseList.add(e);
     }
 
-    public void addNewIncome(Income i) {
-        incomeList.add(i);
-
-        //Add income to user file
-        try {
-            FileWriter myWriter = new FileWriter("output/userdata/"+name + ".txt", true);
-            myWriter.write("Income: "  + i.getName() + " " + i.getAmount() + " " + i.getFrequencyInDays() + "\n");
-            myWriter.close();
-        } catch (IOException e) {
-            System.out.println("Failed to write user data");
-            e.printStackTrace();
-        }
-    }
-
-    public void addNewExpense(Expense e) {
-        expenseList.add(e);
-
-        //Add expense to user file
-        try {
-            FileWriter myWriter = new FileWriter("output/userdata/"+name + ".txt", true);
-            myWriter.write("Expense: "  + e.getName() + " " + e.getAmount() + " " + e.getFrequencyInDays() + "\n");
-            myWriter.close();
-        } catch (IOException err) {
-            System.out.println("Failed to write user data");
-            err.printStackTrace();
-        }
-    }
-
     public void addNewBalance(double b) {
         //Add expense to user file
         try {
-            FileWriter myWriter = new FileWriter("output/userdata/"+name + ".txt", true);
+            FileWriter myWriter = new FileWriter("resources/userdata/" +name + ".txt", true);
             myWriter.write(b + "\n");
             myWriter.close();
         } catch (IOException err) {
@@ -160,7 +114,7 @@ public class User {
     }
 
     public void loadUserData() {
-        File usersFile = new File("output/userdata/"+name + ".txt");
+        File usersFile = new File("resources/userdata/" +name + ".txt");
         Scanner input = null;
 
 

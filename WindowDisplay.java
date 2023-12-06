@@ -10,6 +10,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
@@ -39,24 +40,17 @@ public class WindowDisplay extends Application {
 	}
 
 	private Screen screen = null;
-	private	Users userList = null;
+	private	UserManager userList = null;
 	private User currentUser = null;
 
 	// Font Sizes
 	int bigText = 60;
 	int smallText = 20;
 
-	String current_style = "styleSheets/styleGreen.css";
-
-	Scene scene = null;
-
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
-		// Style Sheet Switching
-
-
-		userList = new Users();
+		userList = new UserManager();
 
 		primaryStage.setTitle("Financial Assistant");
 
@@ -77,68 +71,6 @@ public class WindowDisplay extends Application {
 		grid.setHgap(5);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(50, 25, 25, 25));
-
-		// Style Changing Buttons
-		Label styleLabel = new Label("Themes");
-		grid.add(styleLabel, 1, 29);
-
-		Button greenB = new Button("Forest Green");
-		HBox greenH = new HBox(5);
-		greenH.getChildren().add(greenB);
-		grid.add(greenH, 1, 30);
-
-		Button darkB = new Button("Stone Gray");
-		HBox darkH = new HBox(5);
-		darkH.getChildren().add(darkB);
-		grid.add(darkH, 1, 31);
-
-		Button blueB = new Button("Lake Blue");
-		HBox blueH = new HBox(5);
-		blueH.getChildren().add(blueB);
-		grid.add(blueH, 1, 32);
-
-		Button redB = new Button("Clay Red");
-		HBox redH = new HBox(5);
-		redH.getChildren().add(redB);
-		grid.add(redH, 1, 33);
- 
-		greenB.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				current_style = "styleSheets/styleGreen.css";
-				scene.getStylesheets().clear();
-				scene.getStylesheets().add(WindowDisplay.class.getResource(current_style).toExternalForm());
-			}
-		});
-
-		darkB.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				current_style = "styleSheets/styleDark.css";
-				scene.getStylesheets().clear();
-				scene.getStylesheets().add(WindowDisplay.class.getResource(current_style).toExternalForm());
-			}
-		});
-
-		blueB.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				current_style = "styleSheets/styleBlue.css";
-				scene.getStylesheets().clear();
-				scene.getStylesheets().add(WindowDisplay.class.getResource(current_style).toExternalForm());
-			}
-		});
-
-		redB.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				current_style = "styleSheets/styleRed.css";
-				scene.getStylesheets().clear();
-				scene.getStylesheets().add(WindowDisplay.class.getResource(current_style).toExternalForm());
-			}
-		});
-
-
 
 		// User Creator Labels and Textfields
 		Text userCreation = new Text("  Create User");
@@ -240,7 +172,7 @@ public class WindowDisplay extends Application {
 				if(loginOutcome == 2){
 					loginError.setText("Login Successful!");
 					loginError.setFill(Color.DARKGREEN);
-					loadAccountDetails(currentUser, current_style);
+					loadAccountDetails(currentUser);
 					((Node) (event.getSource())).getScene().getWindow().hide();
 				}
 			}
@@ -251,12 +183,12 @@ public class WindowDisplay extends Application {
 		// Commented out while working on ui
 		// Group root = new Group(grid);
 
-		scene = new Scene(grid, 250, 500);
+		Scene scene = new Scene(grid, 250, 500);
 		// Add your content to the scene
 
 		//Set the scene on the stage and show the stage
 		primaryStage.setScene(scene);
-		scene.getStylesheets().add(WindowDisplay.class.getResource(current_style).toExternalForm());
+		//scene.getStylesheets().add(WindowDisplay.class.getResource("resources.styleSheets/style.css").toExternalForm());
 		primaryStage.show();
 	}
 
@@ -266,7 +198,7 @@ public class WindowDisplay extends Application {
 	}
 
 	//Method that loads the account details tab
-	private void loadAccountDetails(User currentUser, String current) {
+	private void loadAccountDetails(User currentUser) {
 		Stage accountStage = new Stage();
 		accountStage.setTitle("Financial Assistant");
 		accountStage.setX(screen.getVisualBounds().getMinX());
@@ -288,7 +220,7 @@ public class WindowDisplay extends Application {
 		Label username = new Label("Username: " +currentUser.getName());
 		grid2.add(username, 0, 1);
 
-		Label password = new Label("Password: " +userList.getList().get(currentUser.getName()));
+		Label password = new Label("Password: " +currentUser.getPassword());
 		grid2.add(password, 0, 2);
 		Button b3 = new Button("Change Password");
 		HBox h3 = new HBox(10);
@@ -313,17 +245,7 @@ public class WindowDisplay extends Application {
 		balanceText.setFont(Font.font("TimesRoman", FontWeight.BOLD, 30));
 		grid3.add(balanceText,0,1,2,1);
 
-		Scanner dataScan = null;
-		try {
-			File dataFile = new File("output/userdata/" + currentUser.getName() + ".txt");
-			dataScan = new Scanner(dataFile);
-		} catch (IOException e) {
-			System.out.println("Failed to load users' data");
-			e.printStackTrace();
-		}
-
-		double balanceVal = dataScan.nextDouble();
-		dataScan.close();
+		double balanceVal = currentUser.getBalance();
 		Label balanceLabel = new Label("Balance: " + balanceVal);
 		balanceLabel.getStyleClass().add("balanceDisplay");
 		grid3.add(balanceLabel, 1, 1,2,1);
@@ -336,27 +258,15 @@ public class WindowDisplay extends Application {
 		Button b4 = new Button("Set Balance");
 		HBox h4 = new HBox(10);
 		h4.getChildren().add(b4);
+		//h4.setAlignment(Pos.CENTER_LEFT);
 		grid3.add(h4, 2, 2);
 
 		b4.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				if(Double.parseDouble(setBalanceT.getText())>= 0){
+				if(Double.parseDouble(setBalanceT.getText())>= 0) {
 					balanceLabel.setText("Balance: " + Double.parseDouble(setBalanceT.getText()));
-					try{
-						FileWriter myWriter = new FileWriter("output/userdata/" +currentUser.getName() + ".txt", false);
-						myWriter.write(setBalanceT.getText() +"\n");
-
-						Income i = currentUser.getIncomeList().get(0);
-						myWriter.write("Income: " + i.getName() + " " + i.getAmount() + " " + i.getFrequencyInDays() + "\n");
-						Expense e = currentUser.getExpenseList().get(0); // hardcoded for 1, need loop to get more
-						myWriter.write("Expense: " + e.getName() + " " + e.getAmount() + " " + e.getFrequencyInDays() + "\n");
-						myWriter.close();
-					}catch (IOException e) {
-						System.out.println("Failed to write user data");
-						e.printStackTrace();
-					}
-
+					currentUser.setBalance(Double.parseDouble(setBalanceT.getText()));
 				}
 			}
 		});
@@ -404,7 +314,7 @@ public class WindowDisplay extends Application {
 						// Create a new Income object with the entered details
 						Income newIncome = new Income(name, amount, frequencyInDays);
 						// You can add this newIncome to your user's income list here
-						currentUser.addNewIncome(newIncome);
+						currentUser.addIncome(newIncome);
 						dialog.close();
 					}
 					return null;
@@ -466,7 +376,7 @@ public class WindowDisplay extends Application {
 						// Create a new Expense object with the entered details
 						Expense newExpense = new Expense(name, amount, frequencyInDays);
 						// You can add this newExpense to your user's expense list here
-						currentUser.addNewExpense(newExpense);
+						currentUser.addExpense(newExpense);
 						expenseDialog.close();
 					}
 					return null;
@@ -519,40 +429,15 @@ public class WindowDisplay extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 
-				Scanner dataScan = null;
-				try {
-					File dataFile = new File("output/userdata/" + currentUser.getName() + ".txt");
-					dataScan = new Scanner(dataFile);
-				} catch (IOException e) {
-					System.out.println("Failed to load users' data");
-					e.printStackTrace();
-				}
-
-				double balanceVal = dataScan.nextDouble();
+				double balanceVal = currentUser.getBalance();
 				List<Income> incomeList = currentUser.getIncomeList();
 				if (!incomeList.isEmpty()) {
 					Income i = incomeList.get(0);
 					balanceVal += i.getAmount();
 				}
-				dataScan.close();
 				String str = String.format("Balance: %.2f", balanceVal);
+				currentUser.setBalance(balanceVal);
 				balanceLabel.setText(str);
-
-				try {
-					FileWriter myWriter = new FileWriter("output/userdata/" + currentUser.getName() + ".txt", false);
-					myWriter.write(balanceVal + "\n");
-
-					if (!incomeList.isEmpty()) {
-						Income i = incomeList.get(0);
-						myWriter.write("Income: " + i.getName() + " " + i.getAmount() + " " + i.getFrequencyInDays() + "\n");
-					}
-					Expense e = currentUser.getExpenseList().get(0); // hardcoded for 1, need loop to get more
-					myWriter.write("Expense: " + e.getName() + " " + e.getAmount() + " " + e.getFrequencyInDays() + "\n");
-					myWriter.close();
-				} catch (IOException e) {
-					System.out.println("Failed to write user data");
-					e.printStackTrace();
-				}
 			}
 		});
 
@@ -583,44 +468,15 @@ public class WindowDisplay extends Application {
 		b6.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-
-				Scanner dataScan = null;
-				try {
-					File dataFile = new File("output/userdata/" + currentUser.getName() + ".txt");
-					dataScan = new Scanner(dataFile);
-				} catch (IOException e) {
-					System.out.println("Failed to load users' data");
-					e.printStackTrace();
-				}
-
-				double balanceVal = dataScan.nextDouble();
+				double balanceVal = currentUser.getBalance();
 				List<Expense> expenseList = currentUser.getExpenseList();
 				if (!expenseList.isEmpty()) {
 					Expense e = expenseList.get(0);
 					balanceVal -= e.getAmount();
 				}
-				dataScan.close();
 				String str = String.format("Balance: %.2f", balanceVal);
+				currentUser.setBalance(balanceVal);
 				balanceLabel.setText(str);
-
-				try {
-					FileWriter myWriter = new FileWriter("output/userdata/" + currentUser.getName() + ".txt", false);
-					myWriter.write(balanceVal + "\n");
-
-					List<Income> incomeList = currentUser.getIncomeList();
-					if (!incomeList.isEmpty()) {
-						Income i = incomeList.get(0);
-						myWriter.write("Income: " + i.getName() + " " + i.getAmount() + " " + i.getFrequencyInDays() + "\n");
-					}
-					if (!expenseList.isEmpty()) {
-						Expense e = expenseList.get(0);
-						myWriter.write("Expense: " + e.getName() + " " + e.getAmount() + " " + e.getFrequencyInDays() + "\n");
-					}
-					myWriter.close();
-				} catch (IOException e) {
-					System.out.println("Failed to write user data");
-					e.printStackTrace();
-				}
 			}
 		});
 
@@ -740,128 +596,62 @@ public class WindowDisplay extends Application {
 			}
 		});
 
-		//Start Pan's work (Sprint 3) / Danyel (Sprint 4)
-		//Setting Button on account screen
+		//Start Pan's work (Sprint 3)
+		//Setting Button
 		Button settingsButton = new Button("User Settings");
 		HBox settingsBox = new HBox(20);
 		settingsBox.setAlignment(Pos.BOTTOM_RIGHT);
 		settingsBox.getChildren().add(settingsButton);
 		grid3.add(settingsBox, 50, 50);
 
-		// Settings Grid
-		GridPane settingsGrid = new GridPane();
-		settingsGrid.setAlignment(Pos.CENTER);
-		settingsGrid.setHgap(5);
-		settingsGrid.setVgap(10);
-		settingsGrid.setPadding(new Insets(50, 25, 25, 25));
+		settingsButton.setOnAction(e -> {
+			// Create a dialog for user settings
+			Dialog<String> dialog1 = new Dialog<>();
+			dialog1.setTitle("User Settings");
+			dialog.setHeaderText("Change Username, Password, or Email");
 
-		Stage settingsStage = new Stage();
-		Scene settingsScene = new Scene(settingsGrid,250,500);
-		Scene account = new Scene(grid3, 250, 500);
+			// Set the button types
+			ButtonType changeButton = new ButtonType("Save Change", ButtonBar.ButtonData.OK_DONE);
+			dialog1.getDialogPane().getButtonTypes().addAll(changeButton, ButtonType.CANCEL);
 
-		settingsButton.setOnAction(event -> {
-				settingsStage.setTitle("User Settings");
-				settingsStage.setX(screen.getVisualBounds().getMinX());
-				settingsStage.setY(screen.getVisualBounds().getMinY());
-				settingsStage.setWidth(screen.getVisualBounds().getWidth());
-				settingsStage.setHeight(screen.getVisualBounds().getHeight());
+			// Create and configure the username, password, email fields
+			TextField newUsername = new TextField();
+			newUsername.setPromptText("New Username");
+			PasswordField newPassword = new PasswordField();
+			newPassword.setPromptText("New Password");
+			TextField newEmail = new TextField();
+			newEmail.setPromptText("Add Email");
 
-				// Display current user info
-				Text currentSettingsText = new Text("Current User Settings");
-				currentSettingsText.setFont(Font.font("TimesRoman", FontWeight.BOLD, 30));
-				settingsGrid.add(currentSettingsText, 0,0);
+			VBox content = new VBox(20);
+			content.getChildren().addAll(newUsername, newPassword,newEmail);
+			dialog1.getDialogPane().setContent(content);
 
-				Label currentUsernameLabel = new Label("Username: " + currentUser.getName());
-				Label currentPasswordLabel = new Label("Password: " + currentUser.getPassword());
-				Label currentEmailLabel = new Label("Email: " + currentUser.getEmail());
+			// Request focus on the username field by default
+			Platform.runLater(() -> newUsername.requestFocus());
 
-				settingsGrid.add(currentUsernameLabel,0,1);
-				settingsGrid.add(currentPasswordLabel,0,2);
-				settingsGrid.add(currentEmailLabel,0,3);
+			// Handle button actions
+			dialog1.setResultConverter(dialogButton -> {
+				if (dialogButton == changeButton) {
+					// Implement logic to change the username and password
+					String updatedUsername = newUsername.getText();
+					String updatedPassword = newPassword.getText();
+					String updatedEmail = newEmail.getText();
+					// Update the user details accordingly
+					// For instance: currentUser.setName(updatedUsername);
+					//               currentUser.setPassword(updatedPassword);
+				}
+				return null;
+			});
 
-				Text userSettingsText = new Text("Change User Settings");
-				userSettingsText.setFont(Font.font("TimesRoman", FontWeight.BOLD, 30));
-				settingsGrid.add(userSettingsText, 0, 4,2,1);
+			dialog1.showAndWait();
+		});
 
-				// Create and configure the username, password, email labels, textfields, and buttons
-				Label usernameLabel = new Label("New Username");
-				Label passwordLabel = new Label("New password");
-				Label emailLabel = new Label("New Email");
-
-				TextField newUsername = new TextField();
-				PasswordField newPassword = new PasswordField();
-				TextField newEmail = new TextField();
-
-				Button changeUsernameButton = new Button("Change Username");
-				Button changePasswordButton = new Button("Change Password");
-				Button changeEmailButton = new Button("Change Email");
-				// Add everything to the grid
-				settingsGrid.add(usernameLabel,0,5);
-				settingsGrid.add(passwordLabel,0,6);
-				settingsGrid.add(emailLabel,0,7);
-
-				settingsGrid.add(newUsername, 1, 5);
-				settingsGrid.add(newPassword, 1, 6);
-				settingsGrid.add(newEmail, 1, 7);
-
-				settingsGrid.add(changeUsernameButton, 2,5);
-				settingsGrid.add(changePasswordButton, 2,6);
-				settingsGrid.add(changeEmailButton, 2,7);
-
-				// Back button
-				Button settingsBackButton = new Button("Back");
-				settingsBackButton.setFont(Font.font("TimesRoman", FontWeight.BOLD, 20));
-				settingsGrid.add(settingsBackButton, 0,9);
-				settingsBackButton.setOnAction(new EventHandler<ActionEvent>() {
-					@Override
-					public void handle(ActionEvent event) {
-						settingsStage.setScene(account);
-					}
-				});				
-				// Methodsd to change the value of username, password, or email when corresponding button is pressed
-				changeUsernameButton.setOnAction(new EventHandler<ActionEvent>() {
-					@Override
-					public void handle(ActionEvent event) {
-						if(newUsername.getText() != null){
-							String updatedUsername = newUsername.getText();
-							currentUser.setName(updatedUsername);
-							newUsername.setText("");			// Reset text box
-							currentUsernameLabel.setText("Username: " + currentUser.getName());	// Update the on screen current info
-						}
-					}
-				});
-				changePasswordButton.setOnAction(new EventHandler<ActionEvent>() {
-					@Override
-					public void handle(ActionEvent event) {
-						if(newPassword.getText() != null){
-							String updatedPassword = newPassword.getText();
-							currentUser.setName(updatedPassword);
-							newPassword.setText("");			// Reset text box
-							currentPasswordLabel.setText("Password: " + currentUser.getPassword());	// Update the on screen current info
-						}
-					}
-				});
-				changeEmailButton.setOnAction(new EventHandler<ActionEvent>() {
-					@Override
-					public void handle(ActionEvent event) {
-						if(newEmail.getText() != null){
-							String updatedEmail = newEmail.getText();
-							currentUser.setName(updatedEmail);
-							newEmail.setText("");			// Reset text box
-							currentEmailLabel.setText("Email: " + currentUser.getEmail());	// Update the on screen current info
-						}
-					}
-				});
-				settingsStage.setScene(settingsScene);
-				settingsStage.showAndWait();
-			}
-		);
-
-		//End of Pan's work(Sprint 3) / Danyel (Sprint 4)
+		//End of Pan's work(Sprint 3)
 
 		// scene setup
+		Scene account = new Scene(grid3, 250, 500);
 		accountStage.setScene(account);
-		account.getStylesheets().add(WindowDisplay.class.getResource(current).toExternalForm());
+		//account.getStylesheets().add(WindowDisplay.class.getResource("resources.styleSheets/style.css").toExternalForm());
 		accountStage.show();
 
 	}
@@ -871,10 +661,10 @@ public class WindowDisplay extends Application {
 	//return 1 means no username provided
 	//return 2 means no password provided
 	//return 3 means username already taken
-	private int createNewUser(Users users, String name, String pw)
+	private int createNewUser(UserManager users, String name, String pw)
 	{
 		if ((users.getUser(name) == null) && (name.length() > 0) && (pw.length() > 0)) {
-			User target = users.newUser(name, pw);
+			User target = users.newUser(name, pw, null);
 			target.addNewBalance(0.00);
 			return 0;
 		} else if (name.length() == 0){
@@ -891,12 +681,12 @@ public class WindowDisplay extends Application {
 	//return 0 means incorrect username
 	//return 1 means incorrect password
 	//return 2 means successful login
-	private int attemptLogin(Users users, User currentUser, String name, String password)
+	private int attemptLogin(UserManager users, User currentUser, String name, String password)
 	{
 		//find
 		User target = users.getUser(name);
 		if (target != null) {
-			if ((users.getList().get(name)).equals(password)) {
+			if (target.getPassword().equals(password)) {
 				this.currentUser = target;
 				currentUser = target;
 				return 2;
