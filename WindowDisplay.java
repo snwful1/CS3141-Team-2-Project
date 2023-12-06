@@ -101,7 +101,7 @@ public class WindowDisplay extends Application {
 		HBox redH = new HBox(5);
 		redH.getChildren().add(redB);
 		grid.add(redH, 1, 33);
-/* 
+ 
 		greenB.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -138,7 +138,7 @@ public class WindowDisplay extends Application {
 			}
 		});
 
-*/
+
 
 		// User Creator Labels and Textfields
 		Text userCreation = new Text("  Create User");
@@ -256,7 +256,7 @@ public class WindowDisplay extends Application {
 
 		//Set the scene on the stage and show the stage
 		primaryStage.setScene(scene);
-		//scene.getStylesheets().add(WindowDisplay.class.getResource(current_style).toExternalForm());
+		scene.getStylesheets().add(WindowDisplay.class.getResource(current_style).toExternalForm());
 		primaryStage.show();
 	}
 
@@ -861,7 +861,7 @@ public class WindowDisplay extends Application {
 
 		// scene setup
 		accountStage.setScene(account);
-		//account.getStylesheets().add(WindowDisplay.class.getResource(current).toExternalForm());
+		account.getStylesheets().add(WindowDisplay.class.getResource(current).toExternalForm());
 		accountStage.show();
 
 	}
