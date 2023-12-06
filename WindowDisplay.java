@@ -82,18 +82,23 @@ public class WindowDisplay extends Application {
 		TextField userTextField = new TextField();
 		grid.add(userTextField, 1, 2);
 
-		Label pw = new Label("New Password:");
-		grid.add(pw, 0, 3);
+		Label email = new Label("                    Email:");
+		grid.add(email, 0, 3);
+		TextField emailField = new TextField();
+		grid.add(emailField, 1, 3);
+
+		Label pw = new Label("New Password: ");
+		grid.add(pw, 0, 4);
 		PasswordField pwBox = new PasswordField();
 		pwBox.setFont(Font.font("Cambria", FontWeight.NORMAL, smallText));
-		grid.add(pwBox, 1, 3);
+		grid.add(pwBox, 1, 4);
 
 		// User Creator Button
 		Button b1 = new Button("Create New User");
 		HBox h1 = new HBox(10);
 		h1.setAlignment(Pos.CENTER_RIGHT);
 		h1.getChildren().add(b1);
-		grid.add(h1, 1, 4);
+		grid.add(h1, 1, 5);
 
 		Text createError = new Text();
 		createError.setFont(Font.font("Cambria", FontWeight.NORMAL, smallText));
@@ -104,11 +109,12 @@ public class WindowDisplay extends Application {
 		b1.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				int createUserResult = createNewUser(userList, userTextField.getText(), pwBox.getText());
+				int createUserResult = createNewUser(userList, userTextField.getText(), emailField.getText(),  pwBox.getText());
 				if (createUserResult == 0) {
 					createError.setText("New user " + userTextField.getText() + " created!");
 					createError.setFill(Color.DARKBLUE);
 					userTextField.clear();
+					emailField.clear();
 					pwBox.clear();
 				}
 				if (createUserResult == 1){
@@ -119,6 +125,9 @@ public class WindowDisplay extends Application {
 					createError.setFill(Color.DARKRED);
 				} else if (createUserResult == 3) {
 					createError.setText("Error: User with that name already exists");
+					createError.setFill(Color.DARKRED);
+				} else if (createUserResult == 4) {
+					createError.setText("Error: Email Needed");
 					createError.setFill(Color.DARKRED);
 				}
 			}
@@ -619,11 +628,11 @@ public class WindowDisplay extends Application {
 			newUsername.setPromptText("New Username");
 			PasswordField newPassword = new PasswordField();
 			newPassword.setPromptText("New Password");
-			TextField newEmail = new TextField();
-			newEmail.setPromptText("Add Email");
+			//TextField newEmail = new TextField();
+			//newEmail.setPromptText("Add Email");
 
 			VBox content = new VBox(20);
-			content.getChildren().addAll(newUsername, newPassword,newEmail);
+			content.getChildren().addAll(newUsername, newPassword);//, newEmail);
 			dialog1.getDialogPane().setContent(content);
 
 			// Request focus on the username field by default
@@ -635,7 +644,14 @@ public class WindowDisplay extends Application {
 					// Implement logic to change the username and password
 					String updatedUsername = newUsername.getText();
 					String updatedPassword = newPassword.getText();
-					String updatedEmail = newEmail.getText();
+					//Todo: implement checks for changing username (cant have 2 users with the same usernames)
+					if(newUsername.getText().length() > 0) {
+						currentUser.setName(newUsername.getText());
+					}
+					if(newPassword.getText().length() > 0) {
+						currentUser.setPassword(newPassword.getText());
+					}
+					//String updatedEmail = newEmail.getText();
 					// Update the user details accordingly
 					// For instance: currentUser.setName(updatedUsername);
 					//               currentUser.setPassword(updatedPassword);
@@ -661,14 +677,17 @@ public class WindowDisplay extends Application {
 	//return 1 means no username provided
 	//return 2 means no password provided
 	//return 3 means username already taken
-	private int createNewUser(UserManager users, String name, String pw)
+	//return 4 means no email provided
+	private int createNewUser(UserManager users, String name, String email, String pw)
 	{
-		if ((users.getUser(name) == null) && (name.length() > 0) && (pw.length() > 0)) {
-			User target = users.newUser(name, pw, null);
+		if ((users.getUser(name) == null) && (name.length() > 0) && (pw.length() > 0) && (email.length() > 0)) {
+			User target = users.newUser(name, email, pw, null);
 			target.addNewBalance(0.00);
 			return 0;
-		} else if (name.length() == 0){
+		} else if (name.length() == 0) {
 			return 1;
+		} else if(email.length() == 0) {
+			return 4;
 		} else if (pw.length() == 0) {
 			return 2;
 		}

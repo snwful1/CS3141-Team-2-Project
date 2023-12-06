@@ -34,17 +34,16 @@ public class UserManager {
                 }
                 String username = "";
                 String password = "";
+                String email = "";
                 double balance = 0.0;
-
-                // Todo: email needs to be properly implemented
 
                 if (input.hasNextLine())
                     username = input.nextLine();
                 if (input.hasNextLine())
                     password = input.nextLine();
-                User user = newUser(username, password, userFile);
-                //if(input.hasNextLine())
-                  //user.setEmail(input.nextLine());
+                if(input.hasNextLine())
+                    email = input.nextLine();
+                User user = newUser(username, email, password, userFile);
 
                 if (input.hasNextLine())
                     user.setBalance(Double.parseDouble(input.nextLine()));
@@ -86,7 +85,7 @@ public class UserManager {
                 FileWriter w = new FileWriter(file);
                 w.write(user.getName() + "\n");
                 w.write(user.getPassword() + "\n");
-                //w.write(user.getEmail() + "\n"); //Todo: Implement
+                w.write(user.getEmail() + "\n");
                 w.write(user.getBalance() + "\n");
                 user.getIncomeList().forEach( income -> {
                     try {
@@ -117,8 +116,8 @@ public class UserManager {
      * @param password User's input password
      * @param f The users file. Brand-new users should have a NULL file
      */
-    public User newUser(String name, String password, File f) { // Todo: add email
-        User user = new User(name, password);
+    public User newUser(String name, String email, String password, File f) { // Todo: add email
+        User user = new User(name, password, email);
         userList.add(user);
         if(f == null) {
             File file = new File("resources/userdata/"+name+".txt");

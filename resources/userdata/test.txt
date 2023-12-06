@@ -1,5 +1,6 @@
-test
-1234
-7400.0
-Income: test 2233.0 2
-Expense: test2 234234.0 3
+test2
+5678
+test@gmail.com
+4000.0
+Income: pay 2000.0 14
+Expense: rent 600.0 30

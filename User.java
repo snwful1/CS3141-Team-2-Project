@@ -27,21 +27,20 @@ public class User {
         initUser();
     }
 
-    public User(String name, String password) {
-        this.name = name;
-        this.password = password;
-        incomeList = new ArrayList<Income>();
-        expenseList = new ArrayList<Expense>();
-    }
-
     // Getters and Setters
     public String getName() {
         return name;
     }
-    public void setName(String name) {this.name = name;}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public String getPassword() { return password;}
-    public void setPassword(String password) { this.password = password;}
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public double getBalance() {
         return balance;
@@ -50,33 +49,18 @@ public class User {
         this.balance = balance;
     }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public String getEmail() {
+        return email;
+    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public ArrayList<Expense> getExpenseList() {
         return expenseList;
     }
     public ArrayList<Income> getIncomeList() {
         return incomeList;
-    }
-
-    private void saveUserData() {
-        File userFile = new File("resources/userdata/" + name + ".txt");
-
-        try {
-            FileWriter myWriter = new FileWriter(userFile, false);
-            myWriter.write(this.password + "\n"); // Save the new password
-            for (Income i : incomeList) {
-                myWriter.write("Income: " + i.getName() + " " + i.getAmount() + " " + i.getFrequencyInDays() + "\n");
-            }
-            for (Expense e : expenseList) {
-                myWriter.write("Expense: " + e.getName() + " " + e.getAmount() + " " + e.getFrequencyInDays() + "\n");
-            }
-            myWriter.close();
-        } catch (IOException e) {
-            System.out.println("Failed to write user data");
-            e.printStackTrace();
-        }
     }
 
     public void initUser() {
@@ -111,45 +95,5 @@ public class User {
             System.out.println("Failed to write user data");
             err.printStackTrace();
         }
-    }
-
-    public void loadUserData() {
-        File usersFile = new File("resources/userdata/" +name + ".txt");
-        Scanner input = null;
-
-
-
-        //Create file if it does not exist and open with scanner
-        try {
-            usersFile.createNewFile();
-            input = new Scanner(usersFile);
-        } catch (IOException e) {
-            System.out.println("Failed to load users' data");
-            e.printStackTrace();
-        }
-        //Read in user id, name, and password and add user to the list
-        String type = null;
-        String name = null;
-        double amount = 0;
-        int frequency = 0;
-
-        if (input.hasNext()) {
-            balance = input.nextDouble();
-        }
-
-        while (input.hasNextLine()) {
-            if (input.hasNext()) {
-                type = input.next();
-                name = input.next();
-                amount = input.nextDouble();
-                frequency = input.nextInt();
-                if (type.equals("Income:")) {
-                    addIncome(new Income(name, amount, frequency));
-                } else if (type.equals("Expense:")) {
-                    addExpense(new Expense(name, amount, frequency));
-                }
-            } else {break;}
-        }
-        input.close();
     }
 }
