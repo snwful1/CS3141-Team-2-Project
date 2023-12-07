@@ -18,7 +18,6 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.paint.Color;
-import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.layout.*;
@@ -669,70 +668,130 @@ public class WindowDisplay extends Application {
 			}
 		});
 
-		//Start Pan's work (Sprint 3)
-		//Setting Button
+		//Start Pan's work (Sprint 3) / Danyel (Sprint 4)
+		//Setting Button on account screen
 		Button settingsButton = new Button("User Settings");
 		HBox settingsBox = new HBox(20);
 		settingsBox.setAlignment(Pos.BOTTOM_RIGHT);
 		settingsBox.getChildren().add(settingsButton);
 		grid3.add(settingsBox, 50, 50);
 
-		settingsButton.setOnAction(e -> {
-			// Create a dialog for user settings
-			Dialog<String> dialog1 = new Dialog<>();
-			dialog1.setTitle("User Settings");
-			dialog.setHeaderText("Change Username, Password, or Email");
+		// Settings Grid
+		GridPane settingsGrid = new GridPane();
+		settingsGrid.setAlignment(Pos.CENTER);
+		settingsGrid.setHgap(5);
+		settingsGrid.setVgap(10);
+		settingsGrid.setPadding(new Insets(50, 25, 25, 25));
 
-			// Set the button types
-			ButtonType changeButton = new ButtonType("Save Change", ButtonBar.ButtonData.OK_DONE);
-			dialog1.getDialogPane().getButtonTypes().addAll(changeButton, ButtonType.CANCEL);
+		Stage settingsStage = new Stage();
+		Scene settingsScene = new Scene(settingsGrid,250,500);
+		Scene account = new Scene(grid3, 250, 500);
 
-			// Create and configure the username, password, email fields
-			TextField newUsername = new TextField();
-			newUsername.setPromptText("New Username");
-			PasswordField newPassword = new PasswordField();
-			newPassword.setPromptText("New Password");
-			//TextField newEmail = new TextField();
-			//newEmail.setPromptText("Add Email");
+		settingsButton.setOnAction(event -> {
+				settingsStage.setTitle("User Settings");
+				settingsStage.setX(screen.getVisualBounds().getMinX());
+				settingsStage.setY(screen.getVisualBounds().getMinY());
+				settingsStage.setWidth(screen.getVisualBounds().getWidth());
+				settingsStage.setHeight(screen.getVisualBounds().getHeight());
 
-			VBox content = new VBox(20);
-			content.getChildren().addAll(newUsername, newPassword);//, newEmail);
-			dialog1.getDialogPane().setContent(content);
+				// Display current user info
+				Text currentSettingsText = new Text("Current User Settings");
+				currentSettingsText.setFont(Font.font("TimesRoman", FontWeight.BOLD, 30));
+				settingsGrid.add(currentSettingsText, 0,0);
 
-			// Request focus on the username field by default
-			Platform.runLater(() -> newUsername.requestFocus());
+				Label currentUsernameLabel = new Label("Username: " + currentUser.getName());
+				Label currentPasswordLabel = new Label("Password: " + currentUser.getPassword());
+				Label currentEmailLabel = new Label("Email: " + currentUser.getEmail());
 
-			// Handle button actions
-			dialog1.setResultConverter(dialogButton -> {
-				if (dialogButton == changeButton) {
-					// Implement logic to change the username and password
-					String updatedUsername = newUsername.getText();
-					String updatedPassword = newPassword.getText();
-					//Todo: implement checks for changing username (cant have 2 users with the same usernames)
-					if(newUsername.getText().length() > 0) {
-						currentUser.setName(newUsername.getText());
+				settingsGrid.add(currentUsernameLabel,0,1);
+				settingsGrid.add(currentPasswordLabel,0,2);
+				settingsGrid.add(currentEmailLabel,0,3);
+
+				Text userSettingsText = new Text("Change User Settings");
+				userSettingsText.setFont(Font.font("TimesRoman", FontWeight.BOLD, 30));
+				settingsGrid.add(userSettingsText, 0, 4,2,1);
+
+				// Create and configure the username, password, email labels, textfields, and buttons
+				Label usernameLabel = new Label("New Username");
+				Label passwordLabel = new Label("New password");
+				Label emailLabel = new Label("New Email");
+
+				TextField newUsername = new TextField();
+				PasswordField newPassword = new PasswordField();
+				TextField newEmail = new TextField();
+
+				Button changeUsernameButton = new Button("Change Username");
+				Button changePasswordButton = new Button("Change Password");
+				Button changeEmailButton = new Button("Change Email");
+				// Add everything to the grid
+				settingsGrid.add(usernameLabel,0,5);
+				settingsGrid.add(passwordLabel,0,6);
+				settingsGrid.add(emailLabel,0,7);
+
+				settingsGrid.add(newUsername, 1, 5);
+				settingsGrid.add(newPassword, 1, 6);
+				settingsGrid.add(newEmail, 1, 7);
+
+				settingsGrid.add(changeUsernameButton, 2,5);
+				settingsGrid.add(changePasswordButton, 2,6);
+				settingsGrid.add(changeEmailButton, 2,7);
+
+				// Back button
+				Button settingsBackButton = new Button("Back");
+				settingsBackButton.setFont(Font.font("TimesRoman", FontWeight.BOLD, 20));
+				settingsGrid.add(settingsBackButton, 0,9);
+				settingsBackButton.setOnAction(new EventHandler<ActionEvent>() {
+					@Override
+					public void handle(ActionEvent event) {
+						settingsStage.setScene(account);		// Go back to the account screen
 					}
-					if(newPassword.getText().length() > 0) {
-						currentUser.setPassword(newPassword.getText());
+				});				
+				// Methods to change the value of username, password, or email when corresponding button is pressed
+				changeUsernameButton.setOnAction(new EventHandler<ActionEvent>() {
+					@Override
+					public void handle(ActionEvent event) {
+						if(newUsername.getText() != null){
+							String updatedUsername = newUsername.getText();
+							currentUser.setName(updatedUsername);
+							newUsername.setText("");			// Reset text box
+							currentUsernameLabel.setText("Username: " + currentUser.getName());	// Update the on screen current info
+						}
 					}
-					//String updatedEmail = newEmail.getText();
-					// Update the user details accordingly
-					// For instance: currentUser.setName(updatedUsername);
-					//               currentUser.setPassword(updatedPassword);
-				}
-				return null;
-			});
+				});
+				changePasswordButton.setOnAction(new EventHandler<ActionEvent>() {
+					@Override
+					public void handle(ActionEvent event) {
+						if(newPassword.getText() != null){
+							String updatedPassword = newPassword.getText();
+							currentUser.setName(updatedPassword);
+							newPassword.setText("");			// Reset text box
+							currentPasswordLabel.setText("Password: " + currentUser.getPassword());	// Update the on screen current info
+						}
+					}
+				});
+				changeEmailButton.setOnAction(new EventHandler<ActionEvent>() {
+					@Override
+					public void handle(ActionEvent event) {
+						if(newEmail.getText() != null){
+							String updatedEmail = newEmail.getText();
+							currentUser.setName(updatedEmail);
+							newEmail.setText("");			// Reset text box
+							currentEmailLabel.setText("Email: " + currentUser.getEmail());	// Update the on screen current info
+						}
+					}
+				});
+				settingsStage.setScene(settingsScene);
+				settingsStage.showAndWait();
+			}
+		);
 
-			dialog1.showAndWait();
-		});
-
-		//End of Pan's work(Sprint 3)
+		//End of Pan's work(Sprint 3) / Danyel (Sprint 4)
 
 		// scene setup
-		Scene account = new Scene(grid3, 250, 500);
 		accountStage.setScene(account);
 		account.getStylesheets().add(WindowDisplay.class.getResource(current).toExternalForm());
 		accountStage.show();
+
 
 	}
 
