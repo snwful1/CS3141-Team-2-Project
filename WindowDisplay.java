@@ -473,22 +473,23 @@ public class WindowDisplay extends Application {
 
 		// END SAM'S WORK ON CUSTOM INCOME AND EXPENSE BUTTONS
 
-		// income
+		// Income Startup Column
 		Text incomeText = new Text("Income");
 		incomeText.setFont(Font.font("TimesRoman", FontWeight.BOLD, 30));
 		grid3.add(incomeText, 0, 4, 2, 1);
-		List<Income> incomeList = currentUser.getIncomeList();
-		if (!incomeList.isEmpty()) {
-			Income i = incomeList.get(0); // Assuming you want to display the first income item
 
+		List<Income> incomeList = currentUser.getIncomeList();
+		int incomeRow = 5; // Starting row for displaying income items
+
+		for (Income i : incomeList) { // Loop through each income item
 			Label incomeNLabel = new Label("Income Name: " + i.getName());
-			grid3.add(incomeNLabel, 0, 5);
+			grid3.add(incomeNLabel, 0, incomeRow++);
 
 			Label incomeALabel = new Label("Income Amount: $" + i.getAmount());
-			grid3.add(incomeALabel, 0, 6);
+			grid3.add(incomeALabel, 0, incomeRow++);
 
 			Label incomeFLabel = new Label("Income Frequency: " + i.getFrequencyInDays() + " days");
-			grid3.add(incomeFLabel, 0, 7);
+			grid3.add(incomeFLabel, 0, incomeRow++);
 		}
 
 		Button b5 = new Button("Apply Manually");
@@ -513,22 +514,23 @@ public class WindowDisplay extends Application {
 			}
 		});
 
-		// expense
+		// Expense Startup Column
 		Text expenseText = new Text("Expense");
 		expenseText.setFont(Font.font("TimesRoman", FontWeight.BOLD, 30));
 		grid3.add(expenseText, 1, 4, 2, 1);
-		List<Expense> expenseList = currentUser.getExpenseList();
-		if (!expenseList.isEmpty()) {
-			Expense e = expenseList.get(0); // Assuming you want to display the first expense item
 
+		List<Expense> expenseList = currentUser.getExpenseList();
+		int expenseRow = 5; // Starting row for displaying expense items
+
+		for (Expense e : expenseList) { // Loop through each expense item
 			Label expenseNLabel = new Label("Expense Name: " + e.getName());
-			grid3.add(expenseNLabel, 1, 5);
+			grid3.add(expenseNLabel, 1, expenseRow++);
 
 			Label expenseALabel = new Label("Expense Amount: $" + e.getAmount());
-			grid3.add(expenseALabel, 1, 6);
+			grid3.add(expenseALabel, 1, expenseRow++);
 
 			Label expenseFLabel = new Label("Expense Frequency: " + e.getFrequencyInDays() + " days");
-			grid3.add(expenseFLabel, 1, 7);
+			grid3.add(expenseFLabel, 1, expenseRow++);
 		}
 
 		Button b6 = new Button("Apply Manually");
